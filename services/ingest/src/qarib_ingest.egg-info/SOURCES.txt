@@ -1,9 +1,0 @@
-pyproject.toml
-src/qarib_ingest/__init__.py
-src/qarib_ingest/models.py
-src/qarib_ingest.egg-info/PKG-INFO
-src/qarib_ingest.egg-info/SOURCES.txt
-src/qarib_ingest.egg-info/dependency_links.txt
-src/qarib_ingest.egg-info/requires.txt
-src/qarib_ingest.egg-info/top_level.txt
-tests/test_models.py

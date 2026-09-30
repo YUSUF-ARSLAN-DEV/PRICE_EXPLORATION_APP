@@ -1,8 +1,0 @@
-pyproject.toml
-src/qarib_matcher/__init__.py
-src/qarib_matcher.egg-info/PKG-INFO
-src/qarib_matcher.egg-info/SOURCES.txt
-src/qarib_matcher.egg-info/dependency_links.txt
-src/qarib_matcher.egg-info/requires.txt
-src/qarib_matcher.egg-info/top_level.txt
-tests/test_smoke.py
