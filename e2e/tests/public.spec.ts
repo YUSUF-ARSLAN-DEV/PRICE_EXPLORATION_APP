@@ -86,7 +86,7 @@ test('an unknown product or locale is a 404, never a crash', async ({ page }) =>
 test('first visit negotiates the language from the browser (Arabic)', async ({ browser }) => {
   const ctx = await browser.newContext({
     locale: 'ar-QA',
-    extraHTTPHeaderOverrides: { 'accept-language': 'ar-QA,ar;q=0.9' },
+    extraHTTPHeaders: { 'accept-language': 'ar-QA,ar;q=0.9' },
   });
   const page = await ctx.newPage();
   await page.goto('/');

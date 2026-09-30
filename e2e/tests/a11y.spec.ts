@@ -15,6 +15,17 @@ async function productUrl(request: import('@playwright/test').APIRequestContext,
   return `/${locale}/product/${cachedId}`;
 }
 
+const describe = (violations: Awaited<ReturnType<AxeBuilder['analyze']>>['violations']) =>
+  violations
+    .filter((v) => BLOCKING.includes(v.impact ?? ''))
+    .map(
+      (v) =>
+        `${v.id}: ${v.nodes
+          .slice(0, 3)
+          .map((n) => `${n.target.join(' ')} [${(n.any[0]?.message ?? '').slice(0, 90)}]`)
+          .join(' | ')}`,
+    );
+
 for (const locale of LOCALES) {
   for (const scheme of ['light', 'dark'] as const) {
     test(`no serious accessibility violations (${locale}, ${scheme})`, async ({
@@ -57,15 +68,11 @@ for (const locale of LOCALES) {
     await page.goto(`/${locale}`);
     await expect(page.getByRole('dialog')).toBeVisible();
     let r = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual(
-      [],
-    );
+    expect(describe(r.violations), 'axe violations').toEqual([]);
     await acceptCookies(page);
     await page.goto(`/${locale}/basket`);
     r = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual(
-      [],
-    );
+    expect(describe(r.violations), 'axe violations').toEqual([]);
   });
 }
 
