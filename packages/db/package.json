@@ -1,0 +1,27 @@
+{
+  "name": "@qarib/db",
+  "version": "0.1.0",
+  "private": true,
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "tsx --test src/db.test.ts",
+    "migrate": "tsx src/cli.ts up",
+    "migrate:down": "tsx src/cli.ts down",
+    "migrate:status": "tsx src/cli.ts status",
+    "seed": "tsx src/cli.ts seed"
+  },
+  "dependencies": {
+    "@qarib/shared": "workspace:*",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/pg": "^8.11.10",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3"
+  }
+}

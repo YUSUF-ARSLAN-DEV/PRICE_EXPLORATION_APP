@@ -13,6 +13,7 @@ Python >= 3.12.
 cp .env.example .env            # Windows PowerShell: Copy-Item .env.example .env
 pnpm install
 pnpm up                         # postgres, redis, meilisearch, azurite (Blob), mailpit
+pnpm db:migrate && pnpm seed    # create schema + demo data
 pnpm build && pnpm test         # sanity check
 pnpm dev                        # web :3000, admin :3001, api :4000
 ```
@@ -29,13 +30,17 @@ pip install -e ".[dev]" && ruff check . && mypy src && pytest
 | `pnpm up`    | start local infrastructure          |
 | `pnpm down`  | stop it                             |
 | `pnpm reset` | wipe volumes and restart            |
-| `pnpm lint` / `typecheck` / `test` / `build` | via Turborepo |
+| `pnpm db:migrate` / `db:down` / `db:status` | apply / roll back / list SQL migrations |
+| `pnpm seed` | seed categories + 2 fake demo retailers (idempotent) |
+| `pnpm gen:fixtures` | regenerate shared size/Arabic test fixtures |
+| `pnpm lint` / `typecheck` / `test` / `build` | via Turborepo (DB tests skip if no DB) |
 
 Local services: Postgres 5432, Redis 6379, Meilisearch 7700, Azurite Blob 10000, Mailpit UI 8025.
 
 ## Layout
 `apps/web` (Next.js) - `apps/api` (NestJS, `GET /health`) - `apps/admin` (internal) -
-`services/ingest`, `services/matcher` (Python) - `packages/shared` (TS types/zod) -
+`services/ingest`, `services/matcher` (Python) - `packages/shared` (TS types/zod, size + Arabic normalisers) -
+`packages/db` (SQL migrations, runner, seed; data model in `docs/architecture/erd.md`) -
 `infra/` (docker, terraform) - `docs/` (legal, security, architecture, runbooks, adr).
 
 ## Rules that matter

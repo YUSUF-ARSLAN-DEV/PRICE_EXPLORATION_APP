@@ -11,7 +11,7 @@
     "up": "docker compose up -d",
     "down": "docker compose down",
     "reset": "docker compose down -v && docker compose up -d",
-    "seed": "node scripts/seed.mjs",
+    "seed": "pnpm --filter @qarib/db seed",
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
@@ -20,7 +20,11 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "check:plan": "node scripts/check-plan-deviation.mjs",
-    "prepare": "node -e \"try{require('child_process').execSync('git config core.hooksPath',{stdio:'ignore'})}catch(e){}\""
+    "prepare": "node -e \"try{require('child_process').execSync('git config core.hooksPath',{stdio:'ignore'})}catch(e){}\"",
+    "db:migrate": "pnpm --filter @qarib/db migrate",
+    "db:down": "pnpm --filter @qarib/db migrate:down",
+    "db:status": "pnpm --filter @qarib/db migrate:status",
+    "gen:fixtures": "python scripts/gen-fixtures.py"
   },
   "devDependencies": {
     "@commitlint/cli": "^19.5.0",

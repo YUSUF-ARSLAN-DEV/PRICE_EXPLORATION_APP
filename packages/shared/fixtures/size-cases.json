@@ -1,0 +1,3728 @@
+[
+  {
+    "input": "4ltr x 6",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1l x 3",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 x 50غم",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 0.6,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 500gram",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 6.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 x 1كجم",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24 pcs",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "1 كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "500ml x 3",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "330 ml",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 x 2liter",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "50 gram",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "250g x 3",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 × 6 pc",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "  200مل x 6  ",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 × 250 g",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 6قطعة",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2x200 مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.4,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1لتر",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢٥٠جرام",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.25,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "750 gram",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 330 مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 3.96,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24pcs",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2x6 قطعة",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "50 غم",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 4ltr",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 1 liter",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 500 g",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24pc",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "24PIECE",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2ltr",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "5kilo",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "10KG",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "500مل x 12",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٦X٦ PCS",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "50gram x 12",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 0.6,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 750ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 2.25,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 × 5 كيلو",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 60.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "١٢x٢٤ قطعة",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 288.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "3x6 pcs",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "24pc x 3",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2.5 كجم",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12قطعة",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "10كيلو",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "200 ml",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1L",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 x 200ml",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.4,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1.5لتر",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "250gram x 2",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6 × 50 g",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 6 pc",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "1.5liter",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٤l",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٥٠٠مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 12 قطعة",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12 x 10كيلو",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 120.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 × 200 مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.4,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 × 750 مل",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 x 5كيلو",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 6,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "250gm",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.25,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3x12 piece",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12X50 GM",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 0.6,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 12 pcs",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2.5كجم",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 2 l",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2كيلو x 12",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 24.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "١٢ × ٥ kilo",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 60.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "١٢ × ٣٣٠ مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 3.96,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12قطعة x 3",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٢ x ١.٥l",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "10 كيلو",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24قطعة",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12 × 5 كجم",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 60.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 6pc",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "10كيلو x 3",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12pc",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 × 250 g",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  2 × 2.5 كجم  ",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6pc x 12",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "  4 ltr  ",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "١.٥liter x ٦",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  ١.٥لتر x ١٢  ",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 18.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750gram",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "١٠٠g",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12x1.5 ltr",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 18.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 12 piece",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "24piece x 6",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12 x 200مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 2.4,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3x250 غم",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "4L",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 piece",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 x 50g",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24 pc",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "500غم x 12",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 6.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "50 gm",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 5كجم",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 60.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٢لتر x ٣",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  5كيلو  ",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6قطعة x 2",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 × 6 piece",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "1kilo x 2",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2liter x 12",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4ltr",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24piece",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12 piece",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 × 500 مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12x2 liter",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750 غم",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12pcs",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "100gm x 3",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3X500 GM",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6X500 GM",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12x12 piece",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "100 gram",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "5 كيلو",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  ٢x١.٥ l  ",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1liter",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "330مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2kg x 2",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 4.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٢ liter",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 4 l",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  330مل  ",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3x1 kg",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "50gm",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6piece",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12x1.5 لتر",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 18.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 x 2.5kilo",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 7.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1لتر x 6",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  ٣ x ٢٥٠gm  ",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٦pc x ٦",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2x200 ml",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.4,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "5كيلو x 6",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 6,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "5KILO",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 500مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "100g",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6x1 liter",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 X 4LITER",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "500gm",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 4 لتر",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 48.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2kg",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  10 kg  ",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 2.5 kg",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 7.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 1 كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 12.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 1kilo",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 2.5 kilo",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "500ml",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6قطعة x 6",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12قطعة x 12",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 × 1.5 LITER",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4لتر x 12",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 48.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1.5 liter",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 × 1 kilo",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 PC",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "750 مل",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  6pcs  ",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "3 x 200ml",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 0.6,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 6 PIECE",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "١ ltr",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 12 pcs",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12قطعة x 2",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 x 500جرام",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 500 مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 × 2 kg",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 4.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6 pcs",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 × 24 قطعة",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٧٥٠ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "200ML X 6",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "100G",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6 × 2.5 kilo",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 6,
+      "base_quantity": 15.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 250 gram",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "330مل x 6",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.98,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢ x ٣٣٠مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.66,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 x 750ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1 كجم",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1.5ltr",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 x 2ltr",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12x2 l",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3x500 مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 500 مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 200 مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 0.6,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24 قطعة",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12 قطعة",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 × 1 لتر",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "١٢ PC",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 x 500g",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2لتر x 3",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1kilo",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  200مل  ",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  50 g  ",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2liter x 2",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1.5LITER",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 × 330 ML",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 3.96,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750ml x 6",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 4.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2.5kilo x 6",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 6,
+      "base_quantity": 15.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "6 x 12pcs",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2.5kilo x 2",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 × 2 KG",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 4.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12x2.5 kg",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 12,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 × 250 غم",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 1 LTR",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٥ كيلو",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "١٢x٦ pcs",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 x 50g",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "750 ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "10كجم",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24piece x 3",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 72.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "200مل x 6",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "100جرام",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "5KG",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٦ PIECE",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "١٢ × ١٠٠ g",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 1.2,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 2ltr",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  1.5 l  ",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  24 pc  ",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "3X6 PCS",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "200ml x 6",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2x250 غم",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1.5ltr x 6",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  6 × 500 مل  ",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢٤pc",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "330 مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6x750 مل",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 4.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  12pc x 3  ",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "500جرام x 6",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2.5كيلو",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  2x1.5 لتر  ",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2.5kilo",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 1 كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  12قطعة x 12  ",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 x 500مل",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 x 12pc",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6قطعة",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٤ltr x ٦",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 × 250 gm",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٦ × ٧٥٠ غم",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 4.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 x 50جرام",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٥٠٠ ml",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  2 kg  ",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "24pcs x 2",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 48.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٦x٢٠٠ مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  3 × 1.5 ltr  ",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 4.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2X100 GRAM",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.2,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 24 PCS",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 288.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12X1 LITER",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 × 1 l",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2.5 كيلو",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1 l",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٦ x ١.٥لتر",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "200ml",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 pc",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "12pcs x 2",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "  50غم  ",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.05,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٣ x ٢kilo",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 6.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1لتر x 2",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "١.٥l",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 x 500ml",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750g x 2",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٦x٢٤ pc",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 144.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٢ ltr",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4liter x 6",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 24.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24PCS",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6x200 مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢٠٠مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢ × ٤ لتر",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 8.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "330ml x 2",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.66,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 kilo",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "200مل x 3",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 0.6,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "100gram x 3",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٢٥٠ g",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.25,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3x12 قطعة",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٢٥٠g",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.25,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 500غم",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12x750 ml",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 12,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 50 جرام",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 330 ml",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 0.99,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4l",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 × 1 liter",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 x 250gm",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 50 gm",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 0.6,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 4 لتر",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "١.٥ لتر",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4لتر",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 × 1.5 ltr",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 9.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 x 2l",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 6,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٢X٤ L",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 8.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  6 pcs  ",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "  12 × 250 GRAM  ",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2x5 kg",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 2,
+      "base_quantity": 10.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1.5l",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 12 قطعة",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "500 g",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 × 50 G",
+    "expected": {
+      "size_value": 50,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "4 لتر",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "200مل",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6pc x 2",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 2,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "750جرام x 2",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 × 4 l",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2x100 gm",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.2,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 × 250 جرام",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 3.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "100غم x 2",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 2,
+      "base_quantity": 0.2,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 2liter",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 6.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 100 جرام",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.3,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٧٥٠ml x ٦",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 4.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٥٠٠g x ٣",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1l",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 كيلو",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 24pcs",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 288.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "٣٣٠ مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "500 ml",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6x6 قطعة",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "330ml",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 لتر",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 2.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "4liter x 2",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 8.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "3 × 10 كجم",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "750جرام",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٥kilo",
+    "expected": {
+      "size_value": 5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 5.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "500 غم",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 24piece",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 288.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "١كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12 x 100غم",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 12,
+      "base_quantity": 1.2,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "250 GM",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.25,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "4 liter",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 4.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2 × 4 LTR",
+    "expected": {
+      "size_value": 4,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 8.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "2X1.5 LITER",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 2,
+      "base_quantity": 3.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  12pcs  ",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 12.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "1 لتر",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "  ٣x١٠ كجم  ",
+    "expected": {
+      "size_value": 10,
+      "size_unit": "kg",
+      "pack_count": 3,
+      "base_quantity": 30.0,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "12x1 لتر",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 12,
+      "base_quantity": 12.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "750 ML",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "١٢قطعة x ٣",
+    "expected": {
+      "size_value": 12,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 36.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "3 x 250g",
+    "expected": {
+      "size_value": 250,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 0.75,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "  200 مل  ",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.2,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "٣ × ٥٠٠ غم",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2 x 330مل",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 2,
+      "base_quantity": 0.66,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1ltr",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24 piece",
+    "expected": {
+      "size_value": 24,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 24.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "  1liter  ",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.0,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6x750 جرام",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "g",
+      "pack_count": 6,
+      "base_quantity": 4.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3x6 قطعة",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 3,
+      "base_quantity": 18.0,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "3x500 ml",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "ml",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "100غم",
+    "expected": {
+      "size_value": 100,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 X 500G",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 3,
+      "base_quantity": 1.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1,5L",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1,000g",
+    "expected": {
+      "size_value": 1000,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "2,5 kg",
+    "expected": {
+      "size_value": 2.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 2.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "75cl",
+    "expected": {
+      "size_value": 750,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.75,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "33 CL",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 1,
+      "base_quantity": 0.33,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "12 oz",
+    "expected": {
+      "size_value": 340.194,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.3402,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1 lb",
+    "expected": {
+      "size_value": 453.592,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.4536,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1 dozen",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 12,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "2 dozen",
+    "expected": {
+      "size_value": 2,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 24,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "دزينة",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "pc",
+      "pack_count": 12,
+      "base_quantity": 12,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "pack of 6",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "pc",
+      "pack_count": 6,
+      "base_quantity": 6,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "6 pack",
+    "expected": {
+      "size_value": 6,
+      "size_unit": "pc",
+      "pack_count": 1,
+      "base_quantity": 6,
+      "base_unit": "pc"
+    }
+  },
+  {
+    "input": "per kg",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "KG",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "كيلو",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "٥٠٠ جرام",
+    "expected": {
+      "size_value": 500,
+      "size_unit": "g",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "1.5 لتر",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 1,
+      "base_quantity": 1.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "6 * 330ml",
+    "expected": {
+      "size_value": 330,
+      "size_unit": "ml",
+      "pack_count": 6,
+      "base_quantity": 1.98,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "24 x 200 ML",
+    "expected": {
+      "size_value": 200,
+      "size_unit": "ml",
+      "pack_count": 24,
+      "base_quantity": 4.8,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "1.000 kg",
+    "expected": {
+      "size_value": 1,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 1,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "0.5kg",
+    "expected": {
+      "size_value": 0.5,
+      "size_unit": "kg",
+      "pack_count": 1,
+      "base_quantity": 0.5,
+      "base_unit": "kg"
+    }
+  },
+  {
+    "input": "3 x 1.5 ltr",
+    "expected": {
+      "size_value": 1.5,
+      "size_unit": "l",
+      "pack_count": 3,
+      "base_quantity": 4.5,
+      "base_unit": "l"
+    }
+  },
+  {
+    "input": "",
+    "expected": null
+  },
+  {
+    "input": "   ",
+    "expected": null
+  },
+  {
+    "input": "Family Pack",
+    "expected": null
+  },
+  {
+    "input": "large",
+    "expected": null
+  },
+  {
+    "input": "1 bottle",
+    "expected": null
+  },
+  {
+    "input": "abc",
+    "expected": null
+  },
+  {
+    "input": "0g",
+    "expected": null
+  },
+  {
+    "input": "0 x 500g",
+    "expected": null
+  },
+  {
+    "input": "g",
+    "expected": null
+  },
+  {
+    "input": "500",
+    "expected": null
+  },
+  {
+    "input": "x2",
+    "expected": null
+  },
+  {
+    "input": "2 x",
+    "expected": null
+  },
+  {
+    "input": "-5kg",
+    "expected": null
+  },
+  {
+    "input": "5 kg kg",
+    "expected": null
+  },
+  {
+    "input": "Assorted",
+    "expected": null
+  },
+  {
+    "input": "N/A",
+    "expected": null
+  },
+  {
+    "input": "١٢٣",
+    "expected": null
+  },
+  {
+    "input": "1/2 kg",
+    "expected": null
+  },
+  {
+    "input": "500 grams approx",
+    "expected": null
+  }
+]

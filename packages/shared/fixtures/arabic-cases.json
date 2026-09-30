@@ -1,0 +1,122 @@
+[
+  {
+    "input": "المَرَاعِي",
+    "expected": "المراعي"
+  },
+  {
+    "input": "حليب",
+    "expected": "حليب"
+  },
+  {
+    "input": "أرز",
+    "expected": "ارز"
+  },
+  {
+    "input": "إناء",
+    "expected": "اناء"
+  },
+  {
+    "input": "آمن",
+    "expected": "امن"
+  },
+  {
+    "input": "ٱلله",
+    "expected": "الله"
+  },
+  {
+    "input": "مدرسة",
+    "expected": "مدرسه"
+  },
+  {
+    "input": "على",
+    "expected": "علي"
+  },
+  {
+    "input": "مؤمن",
+    "expected": "مومن"
+  },
+  {
+    "input": "شائع",
+    "expected": "شايع"
+  },
+  {
+    "input": "١٢٣ جرام",
+    "expected": "123 جرام"
+  },
+  {
+    "input": "٤٥٦",
+    "expected": "456"
+  },
+  {
+    "input": "۷۸۹",
+    "expected": "789"
+  },
+  {
+    "input": "كـــريم",
+    "expected": "كريم"
+  },
+  {
+    "input": "Al-Marai Milk 1L",
+    "expected": "al marai milk 1l"
+  },
+  {
+    "input": "  ALMARAI   Fresh ",
+    "expected": "almarai fresh"
+  },
+  {
+    "input": "Coca‑Cola",
+    "expected": "coca cola"
+  },
+  {
+    "input": "ＡＢＣ１２３",
+    "expected": "abc123"
+  },
+  {
+    "input": "لبن ٢٥٠ مل",
+    "expected": "لبن 250 مل"
+  },
+  {
+    "input": "Nestlé",
+    "expected": "nestlé"
+  },
+  {
+    "input": "",
+    "expected": ""
+  },
+  {
+    "input": "!!!",
+    "expected": ""
+  },
+  {
+    "input": "رز بسمتي 5كجم",
+    "expected": "رز بسمتي 5كجم"
+  },
+  {
+    "input": "حليب، طازج؟",
+    "expected": "حليب طازج"
+  },
+  {
+    "input": "Rice_Basmati",
+    "expected": "rice basmati"
+  },
+  {
+    "input": "زُبْدَة",
+    "expected": "زبده"
+  },
+  {
+    "input": "أَلْبَان",
+    "expected": "البان"
+  },
+  {
+    "input": "Mineral   Water\t500ml",
+    "expected": "mineral water 500ml"
+  },
+  {
+    "input": "7UP",
+    "expected": "7up"
+  },
+  {
+    "input": "مَاء",
+    "expected": "ماء"
+  }
+]
