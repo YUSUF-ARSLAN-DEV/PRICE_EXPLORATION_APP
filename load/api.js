@@ -4,6 +4,9 @@
 import http from 'k6/http';
 import { check } from 'k6';
 
+// LOAD_SCALE < 1 shrinks the arrival rates for small machines (CI runs at 0.2: a shared 2-vCPU runner hosts the
+// whole stack plus k6). The latency budgets are NOT scaled. Full rate (1) is the real test.
+const SCALE = Number(__ENV.LOAD_SCALE || 1);
 const API = __ENV.API || 'http://localhost:4000';
 const WEB = __ENV.WEB || 'http://localhost:3000';
 const TERMS = [
@@ -31,7 +34,7 @@ export const options = {
   scenarios: {
     search: {
       executor: 'constant-arrival-rate',
-      rate: 200,
+      rate: Math.round(200 * SCALE),
       timeUnit: '1s',
       duration: '40s',
       preAllocatedVUs: 100,
@@ -40,7 +43,7 @@ export const options = {
     },
     product_pages: {
       executor: 'constant-arrival-rate',
-      rate: 50,
+      rate: Math.round(50 * SCALE),
       timeUnit: '1s',
       duration: '40s',
       preAllocatedVUs: 50,

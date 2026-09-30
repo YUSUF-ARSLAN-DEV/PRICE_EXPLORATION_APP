@@ -170,11 +170,11 @@ jobs:
         run: pnpm --filter @qarib/e2e test:e2e
       - name: lighthouse budgets (performance >= 90, accessibility/SEO/best-practices >= 95)
         run: pnpm --filter @qarib/e2e lighthouse
-      - name: load test (search p95 < 300 ms)
+      - name: load test at 20 % scale on the shared runner (search p95 < 300 ms; full rate is run locally / in staging)
         run: |
           docker compose -f docker-compose.stack.yml exec -T db psql -U qarib -d qarib -v ON_ERROR_STOP=1 < load/seed-large.sql
           docker compose -f docker-compose.stack.yml exec -T api node dist/jobs/run.js reindex
-          docker run --rm -i --network host -e API=http://localhost:4000 -e WEB=http://localhost:3000 grafana/k6 run --quiet - < load/api.js
+          docker run --rm -i --network host -e LOAD_SCALE=0.2 -e API=http://localhost:4000 -e WEB=http://localhost:3000 grafana/k6 run --quiet - < load/api.js
       - name: upload Playwright report
         if: failure()
         uses: actions/upload-artifact@v4
