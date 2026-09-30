@@ -5,7 +5,7 @@ Everything below runs against the local production-image stack:
 ```bash
 docker compose -f docker-compose.stack.yml up -d --wait     # demo data, Mailpit, Meilisearch
 pnpm --filter @qarib/e2e install:browsers                   # once
-pnpm --filter @qarib/e2e test                               # browser tests (EN/AR, desktop + Pixel 5), axe, chaos
+pnpm --filter @qarib/e2e test:e2e                               # browser tests (EN/AR, desktop + Pixel 5), axe, chaos
 pnpm --filter @qarib/e2e lighthouse                         # budgets: perf >= 90, a11y/SEO/best-practices >= 95
 docker compose -f docker-compose.stack.yml exec -T db psql -U qarib -d qarib -v ON_ERROR_STOP=1 < load/seed-large.sql
 docker compose -f docker-compose.stack.yml exec -T api node dist/jobs/run.js reindex

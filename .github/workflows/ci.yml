@@ -167,7 +167,7 @@ jobs:
           docker build -q -f services/Dockerfile --target matcher -t qarib-matcher:dev .
       - run: docker compose -f docker-compose.stack.yml up -d --wait --wait-timeout 180
       - name: browser + accessibility + chaos tests
-        run: pnpm --filter @qarib/e2e test
+        run: pnpm --filter @qarib/e2e test:e2e
       - name: lighthouse budgets (performance >= 90, accessibility/SEO/best-practices >= 95)
         run: pnpm --filter @qarib/e2e lighthouse
       - name: load test (search p95 < 300 ms)

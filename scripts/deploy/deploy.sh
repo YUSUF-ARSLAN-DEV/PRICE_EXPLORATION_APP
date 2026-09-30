@@ -18,7 +18,7 @@ log() { printf '%s [deploy %s] %s\n' "$(date -u +%FT%TZ)" "$ENVIRONMENT" "$*"; }
 
 ACR=$(az acr list -g "$RG" --query "[0].loginServer" -o tsv)
 WORKSPACE=$(az monitor log-analytics workspace show -g "$RG" -n "log-${NAME}" --query customerId -o tsv)
-[ -n "$ACR" ] && [ -n "$WORKSPACE" ] || { log "resource group $RG is not provisioned"; exit 2; }
+if [ -z "$ACR" ] || [ -z "$WORKSPACE" ]; then log "resource group $RG is not provisioned"; exit 2; fi
 log "release $TAG, registry $ACR"
 
 # ---- 1. migrations (the DB must already be compatible with BOTH the old and the new code) ----

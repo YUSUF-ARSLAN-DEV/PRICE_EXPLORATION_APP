@@ -9,6 +9,7 @@
   --brand: #8a1538; /* maroon */
   --brand-contrast: #ffffff;
   --accent: #0b6b4b;
+  --on-accent: #fff;
   --warn: #8a5a00;
   --warn-bg: #fff4d6;
   --danger: #b00020;
@@ -28,6 +29,7 @@
     --brand: #e0537e;
     --brand-contrast: #1a0a11;
     --accent: #4cc79b;
+    --on-accent: #062b1f;
     --warn: #ffd27a;
     --warn-bg: #3a2c08;
     --danger: #ff7a8c;
@@ -352,7 +354,7 @@ textarea {
   padding: 0.1rem 0.5rem;
   border-radius: 999px;
   background: var(--accent);
-  color: #fff;
+  color: var(--on-accent);
 }
 .badge.warn {
   background: var(--warn-bg);
@@ -436,4 +438,22 @@ table.prices tr.best td {
   table.prices td {
     padding: 0.55rem 0.6rem;
   }
+}
+
+/* WCAG 2.2 target size (2.5.8): every stand-alone control is at least 24 px tall regardless of the
+   font the platform falls back to (Linux fonts rendered 17-21 px targets). Inline links in prose are exempt. */
+.brand,
+.site-nav a,
+.link-button,
+.btn,
+.chip,
+.site-footer nav a,
+summary,
+button {
+  min-block-size: 2rem;
+  display: inline-flex;
+  align-items: center;
+}
+summary {
+  display: flex;
 }
