@@ -1,0 +1,889 @@
+================================================================================
+QATAR GROCERY PRICE COMPARISON APP - MASTER BUILD & DEPLOYMENT PLAN
+Working name: "Qarib" (placeholder - rename freely; check trademark with MoCI first)
+================================================================================
+Plan version : 1.2 (see Change Log CL-003; progress in Section C)
+Created      : 2026-09-30
+Status       : DRAFT - awaiting legal review (see Phase 0)
+
+HOW TO USE THIS DOCUMENT (READ FIRST)
+--------------------------------------------------------------------------------
+1. Work the phases in order. Each step has an ID (e.g. 3.4), a description,
+   and "DONE WHEN" acceptance criteria. Do not mark a step done until the
+   criteria are met.
+2. THIS PLAN IS A LIVING DOCUMENT. If you deviate from it in ANY way (different
+   library, skipped step, reordered phase, new step, changed scope, legal
+   finding that changes the approach), you MUST:
+     a) add an entry to the CHANGE LOG (Section A) in the same commit/PR as the
+        code change,
+     b) edit the affected step in place and mark it "[CHANGED - see CL-00X]",
+     c) never delete old text silently - strike it with "[SUPERSEDED by CL-00X]".
+3. Use the DECISION LOG (Section B) for any architectural decision (ADR-style).
+4. Legal items are marked [LEGAL]. They are blockers: a phase containing an
+   unresolved [LEGAL] item cannot go to public launch.
+5. Disclaimer: this plan summarises the legal landscape as understood at time
+   of writing. It is NOT legal advice. Every [LEGAL] item must be confirmed by
+   a licensed Qatari lawyer before launch. Verify current law texts on Al Meezan
+   (almeezan.qa) since laws and regulator guidance change.
+
+--------------------------------------------------------------------------------
+SECTION A - CHANGE LOG (append-only, newest at bottom)
+--------------------------------------------------------------------------------
+Format:
+  CL-ID | Date | Author | Phase/Step affected | What changed | Why | Impact
+
+CL-001 | 2026-09-30 | Claude (initial draft) | All | Initial plan created | -
+       | Baseline
+
+CL-002 | 2026-09-30 | Claude (on owner's instruction) | Phase 0 step 0.2;
+       | Phase 8 step 8.2; Phase 9 steps 9.1, 9.2, 9.6; ADR-002; new ADR-004,
+       | 005, 006 | Owner decisions recorded: (1) operator is a COMPANY,
+       | (2) cloud = Microsoft Azure (Qatar Central), (3) domain = .qa.
+       | GCP/Cloud Run architecture replaced by Azure equivalents; .qa
+       | registration tasks made concrete. | Owner decision
+       | Impact: Azure service availability in Qatar Central must be verified
+       | in spike 9.0 (new); Terraform uses azurerm provider; GitHub Actions
+       | uses Azure OIDC (federated credentials).
+
+CL-003 | 2026-09-30 | Claude (on owner's instruction) | Phase 0 (all), Phase 1
+       | (1.1-1.5), step 1.4, step 9.0 | Implemented Phase 0 documents and
+       | Phase 1 scaffold. Deviations from the plan text:
+       |  a) 1.4: MinIO replaced by Azurite (Azure Blob emulator): neither
+       |     minio/minio (Docker Hub) nor quay.io/minio/minio could be pulled
+       |     (tested 2026-09-30); Azurite also mirrors production Azure Blob.
+       |  b) 1.4: `make` targets replaced by pnpm scripts (`pnpm up|down|reset|
+       |     seed|test`) because make is not available on the Windows dev box.
+       |  c) 1.1: apps/web, apps/admin, apps/api, packages/shared are minimal
+       |     skeletons only (health endpoint, placeholder pages). Product
+       |     features start in Phases 2+. No next-intl/Tailwind yet (Phase 7).
+       |  d) 1.2: CODEOWNERS uses YUSUF-ARSLAN-DEV (CONFIRMED by owner as the
+       |     repo owner; work stays in the existing repo). The Privacy Lead
+       |     handle for /docs/legal/ is still a placeholder. Branch
+       |     protection and required checks must be enabled by a repo admin
+       |     in GitHub settings (cannot be done from code).
+       |  e) 1.2/1.5: CI workflows written but NOT yet run on GitHub (no
+       |     push done). Locally verified instead: pnpm install/build/test/
+       |     typecheck/format:check, pytest/ruff/mypy for both Python
+       |     services, docker compose up (postgres extensions pg_trgm,
+       |     citext, vector, unaccent present).
+       |  f) 1.2: pnpm `lint` currently = `tsc --noEmit` (no ESLint yet) -
+       |     TODO add ESLint flat config before Phase 6/7 code grows.
+       |  g) 9.0: Terraform spike written (infra/terraform/spike-azure-
+       |     availability) but NOT run or validated (no Azure subscription /
+       |     terraform binary on this machine).
+       |  h) Phase 0: items needing humans (0.1 counsel, 0.2 company/licence/
+       |     domain, 0.6 actual source research, pen-test etc.) are NOT done;
+       |     drafts/templates prepared in docs/legal. Arabic texts are
+       |     unreviewed machine-written drafts. docs/security/controls.md has
+       |     no official NIA control IDs yet.
+       | Why: execution of the plan on the owner's machine and constraints
+       | found while doing so. | Impact: see status table in Section C.
+
+(add new entries below this line)
+
+
+--------------------------------------------------------------------------------
+SECTION C - PROGRESS TRACKER (update statuses as work proceeds)
+--------------------------------------------------------------------------------
+Status values: TODO | IN PROGRESS | DRAFTED (awaiting review) | DONE | BLOCKED
+Last updated: 2026-09-30 (CL-003)
+
+Phase 0
+  0.1 Engage counsel ............ TODO (human) - brief ready: docs/legal/counsel-brief.md
+  0.2 Company, licence, .qa ..... TODO (human) - docs/legal/company-and-domain-checklist.md
+  0.3 PDPPL pack ................ DRAFTED - privacy notice EN/AR, consent texts, DPIA,
+                                   ROPA, sub-processors, breach runbook
+  0.4 Collection policy/registry  DRAFTED - data-collection-policy.md, source-registry.csv
+  0.5 Site legal docs ........... DRAFTED - terms, cookies, takedown, content rules
+  0.6 Source research ........... TODO (human) - all sources default to RED
+  0.7 Security baseline ......... DRAFTED - NIA IDs still to map
+  0.8 Launch checklist .......... DONE (checklist exists; gate still open)
+  0.9 Retention schedule ........ DRAFTED
+Phase 1
+  1.1 Repo layout ............... DONE (skeletons)
+  1.2 Tooling ................... DONE locally; GitHub settings TODO (see CL-003 d)
+  1.3 Environments .............. IN PROGRESS - local done; dev/staging/prod
+                                   BLOCKED on Azure subscription (company)
+  1.4 Local dev stack ........... DONE - verified
+  1.5 CI ........................ DRAFTED - not yet run on GitHub
+  9.0 Azure availability spike .. DRAFTED - not run
+Phases 2-11 ..................... TODO
+
+--------------------------------------------------------------------------------
+SECTION B - DECISION LOG (ADR summary, append-only)
+--------------------------------------------------------------------------------
+Format:  ADR-ID | Date | Decision | Alternatives considered | Reason | Status
+
+ADR-001 | 2026-09-30 | Data sourcing priority: (1) signed partnerships / feeds,
+        | (2) publicly published flyers & official sources, (3) crowd-sourced
+        | receipts/price reports, (4) automated collection of public web pages
+        | ONLY where the site ToS and counsel allow. | Pure scraping first |
+        | Legal risk (cybercrime law, ToS, IP) and fragility | ACCEPTED
+
+ADR-002 | 2026-09-30 | Host in Qatar region | EU/US hosting | PDPPL
+        | cross-border transfer simplicity, latency | ACCEPTED
+        | [CHANGED - see CL-002: vendor now fixed as Azure Qatar Central,
+        | see ADR-006; the "Google Cloud Doha or" option is SUPERSEDED]
+
+ADR-003 | 2026-09-30 | Stack: Next.js (TypeScript) web/PWA, NestJS API,
+        | PostgreSQL 16 + pg_trgm, Meilisearch (or OpenSearch), Redis,
+        | Python workers for ingestion | Django, Laravel, native apps first |
+        | One language on web+API, Python strength in data/ML | ACCEPTED
+
+ADR-004 | 2026-09-30 | Operator is a company (registered entity), not an
+        | individual/informal project | Non-commercial prototype first |
+        | Owner decision; needed for contracts, DPAs, partnerships, PDPPL
+        | controller identity | ACCEPTED (entity type - LLC vs QFC/QFZ/QSTP -
+        | still to be chosen with counsel in step 0.2)
+
+ADR-005 | 2026-09-30 | Primary domain is a .qa domain (via CRA-accredited
+        | registrar) | .com | Owner decision; local trust and SEO signal for
+        | Qatar | ACCEPTED. Consequence: .qa needs company documents; the
+        | registrant must be the company (ADR-004). Also register the
+        | Arabic IDN (.قطر) variant if available; consider a defensive .com
+        | redirect later.
+
+ADR-006 | 2026-09-30 | Cloud = Microsoft Azure, region Qatar Central |
+        | GCP Doha, local providers | Owner preference; in-country region
+        | | ACCEPTED, subject to spike 9.0 confirming needed services exist
+        | in Qatar Central. If a service is missing, prefer a different
+        | Azure service in-region over going out-of-country; log any
+        | exception here and in the Change Log.
+
+(add new ADRs below this line)
+
+
+================================================================================
+1. PRODUCT DEFINITION
+================================================================================
+1.1 Vision
+  A user types a grocery item (Arabic or English, e.g. "Almarai milk 1L",
+  "حليب المراعي") and instantly sees the price at every Qatari grocer we
+  cover, sorted by price, with store, branch/area, unit price (QAR per
+  kg/L/100g), offer/promo flags, "last updated" timestamp, and a link to buy
+  or to the store.
+
+1.2 Target users
+  - Households in Doha / Al Rayyan / Al Wakra / Al Khor / Lusail (expat and
+    Qatari, Arabic + English + later Hindi/Urdu/Malayalam/Tagalog maybe).
+  - Budget-conscious shoppers, families doing monthly baskets.
+
+1.3 MVP scope (v1.0)
+  IN : Item search, product page with price table, unit-price comparison,
+       basket builder ("cheapest store for my whole list"), offers/flyers
+       view, price history chart, Arabic/English with RTL, PWA, user
+       accounts (optional), price alerts (opt-in), report-a-wrong-price.
+  OUT: Payments, in-app ordering, loyalty card integration, native iOS/
+       Android apps (v2), barcode scan (v1.1 - cheap to add via PWA camera).
+
+1.4 Success metrics
+  - Coverage: >= 8 grocers, >= 15,000 canonical products with >= 2 prices.
+  - Freshness: 90% of prices refreshed < 48h old (flyers/offers < 24h).
+  - Match accuracy: >= 97% precision on auto-matched products (audited sample).
+  - Search p95 < 300 ms; page LCP < 2.5 s on 4G.
+  - Zero legal notices/takedowns unresolved > 5 business days.
+
+1.5 Candidate grocers (verify each one's current status and data-access route)
+  Hypermarkets/supermarkets: Lulu Hypermarket, Carrefour Qatar (Majid Al
+  Futtaim), Al Meera, Monoprix Qatar, Family Food Centre, Spar, Safari
+  Hypermarket, Grand Hypermarket, Ansar Gallery, Rawnaq, Mega Mart, Saudia,
+  Aljazeera/others discovered in field survey.
+  Delivery/quick-commerce marketplaces: Talabat (Talabat Mart), Snoonu
+  (Snoonu Market), Rafeeq, Keeta, Baladna/Al Meera online shops.
+  Specialty: Baladna, Al Waha, butcher/fresh-produce chains, Souq Waqif
+  vendors (manual/crowd only).
+  Step 0.6 produces the authoritative list with per-grocer data strategy.
+
+
+================================================================================
+PHASE 0 - LEGAL, COMPLIANCE & BUSINESS SETUP  (Weeks 0-4, runs in parallel
+with Phase 1; blocks public launch)
+================================================================================
+Goal: know exactly what we may collect, store, display and how we must treat
+users BEFORE we write ingestion code against any third party.
+
+0.1 [LEGAL] Engage Qatari counsel
+    Retain a licensed Qatar law firm (tech/data/commercial). Give them this
+    plan. Deliverable: written opinion covering items 0.2 - 0.5.
+    DONE WHEN: signed engagement + opinion memo stored in /docs/legal/.
+
+0.2 [LEGAL] Corporate & licensing
+    [CHANGED - see CL-002 / ADR-004: operator is a company. Remaining
+    decision is the entity form only.]
+    - Choose entity form: Qatari LLC (Ministry of Commerce and Industry -
+      MoCI commercial registration) or a Qatar Financial Centre / Qatar Free
+      Zones / QSTP (Qatar Science & Technology Park) entity. Non-Qatari
+      ownership rules differ (Foreign Investment Law No. 1 of 2019 allows up
+      to 100% in most sectors - confirm). The company is the PDPPL
+      "controller", signs DPAs, partner contracts and owns the .qa domain.
+    - Obtain commercial registration, trade licence with an activity that
+      covers e-commerce/online platform/information services, and Computer
+      Card / tax card via the General Tax Authority.
+    - If we ever sell advertising/affiliate: confirm licence activity.
+    - Register domain [CHANGED - see CL-002 / ADR-005: .qa decided]:
+      .qa is administered by the Communications Regulatory Authority (CRA)
+      via domains.qa and sold through accredited registrars. Steps:
+        1. Finish company registration first (CR + trade licence needed).
+        2. Choose 2-3 candidate names; check MoCI trade-name availability
+           and trademark conflicts (no grocer names/brands in the domain).
+        3. Register via an accredited registrar as the company (not an
+           individual); keep registrar account on company email with MFA;
+           enable registrar lock and auto-renew.
+        4. Check whether the chosen name must match the trade name/
+           activity under current .qa policy (verify with registrar).
+        5. Also try the Arabic IDN variant and reserve obvious typos.
+        6. Put DNS on Azure DNS (Phase 9.6) with DNSSEC if the registry
+           supports it for .qa (verify).
+      Domain name should be locked before Phase 7 (canonical URLs, hreflang,
+      email SPF/DKIM) and before printing the bot User-Agent URL (3.2).
+    DONE WHEN: entity, licence, and domain decisions recorded (ADR) and filed.
+
+0.3 [LEGAL] Personal data - Law No. 13 of 2016 on Personal Data Privacy
+    Protection (PDPPL) and regulator guidance
+    Regulator: the National Cyber Governance and Assurance Affairs (NCGAA)
+    under the National Cyber Security Agency (NCSA) (formerly Compliance and
+    Data Protection Dept. of MOTC). Key obligations to design for:
+    a) Lawfulness & consent: collect personal data only for a specified,
+       lawful purpose; obtain consent unless an exception applies. Consent
+       must be explicit, granular, withdrawable. (No pre-ticked boxes.)
+    b) Transparency: privacy notice stating controller identity, purposes,
+       categories, recipients, retention, rights, contact - in Arabic AND
+       English.
+    c) Data subject rights: access, correction, deletion, withdrawal of
+       consent, objection to processing/automated decisions. Build a
+       self-service "Download my data / Delete my account" flow and a
+       privacy@ mailbox with a documented response SLA (target 30 days,
+       confirm statutory period with counsel).
+    d) Data minimisation & retention: collect only email (or phone) + hashed
+       password + language + optional location area. NO national ID/QID, no
+       precise GPS stored server-side by default, no payment data.
+    e) Security: "adequate" technical and organisational safeguards -
+       encryption in transit (TLS 1.2+/1.3) and at rest, access control,
+       audit logs, secrets management, vulnerability management.
+    f) Breach notification: notify NCGAA AND affected individuals of a breach
+       likely to cause serious damage (confirm exact timing with counsel;
+       internal target: notify NCGAA within 72 hours). Write incident runbook
+       (Phase 9).
+    g) Cross-border transfer: permitted with safeguards and no serious harm;
+       simplest path = Qatar-region hosting and only Qatar/adequate-country
+       sub-processors, with DPAs. Keep a sub-processor register.
+    h) Processor contracts: written DPA with every vendor touching personal
+       data (email sender, analytics, error tracking, cloud).
+    i) Special-nature data (health, ethnicity, religion, marital status,
+       children, criminal) - we must NOT collect. Note: shopping baskets can
+       reveal religion/health; therefore basket/search history linked to a
+       user account is treated as sensitive-by-inference: store minimal,
+       allow disable, short retention (see 0.9).
+    j) Children: do not target under-18s; state 18+ / parental notice in
+       terms (counsel to confirm consent-age handling).
+    k) Register/notify with NCGAA if/when required (check current
+       registration or DPIA requirements); appoint a Privacy Lead
+       (internal person) even if a DPO is not strictly mandated.
+    l) Conduct and file a DPIA (Data Protection Impact Assessment) before
+       launch - template in /docs/legal/dpia.md.
+    DONE WHEN: counsel confirms obligations list; /docs/legal/ contains
+    privacy notice (AR/EN), consent texts, DPIA, ROPA (record of processing),
+    sub-processor register, breach runbook.
+
+0.4 [LEGAL] Data collection / "scraping" / IP risk (HIGHEST RISK AREA)
+    Relevant law (counsel to confirm applicability):
+    - Law No. 14 of 2014 on Combating Cybercrimes: unauthorised access to
+      systems/data, circumventing security measures, and misuse of data are
+      offences. Never bypass logins, captchas, rate-limits, IP blocks, or
+      encryption. Never use credentials not issued to us.
+    - Law No. 7 of 2002 on Copyright and Neighbouring Rights: store photos,
+      product descriptions and flyer artwork are copyright-protected.
+      Facts (a price, a product name, a size) are generally not protected,
+      but images, layouts, and curated descriptions are.
+    - Terms of Service (contract): most grocer sites/apps forbid automated
+      access. Breach = civil exposure even if no crime.
+    - Law No. 19 of 2006 on Competition Protection: we must not facilitate
+      price-fixing/collusion; do not share one grocer's non-public pricing
+      with another; publish only public prices; no non-public forward
+      pricing plans. Counsel to advise on "price transparency" vs collusion
+      risk (e.g. show historical prices with a delay if advised).
+    - Consumer Protection Law No. 8 of 2008: information to consumers must be
+      accurate, not misleading; Arabic language; clear price presentation.
+      Displaying stale prices as current could be misleading - hence
+      mandatory "last updated" timestamps and disclaimers.
+    - Decree-Law No. 16 of 2010 (E-Commerce and Transactions Law) and MoCI
+      rules for online platforms: identity disclosure of operator, terms,
+      complaint channel.
+    - Trademark law: using grocer names/logos. Use names nominatively (to
+      identify), never imply endorsement; get written logo permission in
+      partnerships; otherwise text-only names.
+    Policy derived (binding on engineering):
+      P1. Priority order = ADR-001. Partnerships/feeds first.
+      P2. Before ANY automated collection from a domain: (i) read and archive
+          the ToS and robots.txt (store copy + date in /docs/legal/sources/),
+          (ii) get counsel sign-off or written permission, (iii) record in the
+          Source Registry (step 2.1) with status APPROVED.
+      P3. Collect only price, name, size, unit, barcode, promo, availability,
+          branch. NOT images/descriptions/flyer artwork unless licensed.
+          Use our own neutral product images / generic placeholders or
+          user-submitted photos (we own licence via ToS) or brand-supplied
+          images under licence.
+      P4. Respect robots.txt, identify our bot with a contact URL/email in
+          the User-Agent, throttle (<= 1 req/2 s per domain, off-peak),
+          cache aggressively, stop immediately on a C&D or block request.
+      P5. No circumvention of anti-bot measures, no account creation in
+          retailer apps to reach private APIs, no reverse-engineering of
+          mobile-app APIs without written permission.
+      P6. Takedown process: a documented channel (legal@) - any retailer can
+          request removal; SLA 2 business days to disable that source.
+    DONE WHEN: counsel memo on collection methods; Source Registry template
+    approved; P1-P6 adopted in writing by the team.
+
+0.5 [LEGAL] Website/app legal documents (AR + EN; Arabic controls for
+    Qatari users - counsel to confirm)
+    - Terms of Use, Privacy Policy, Cookie Policy, Acceptable Use, Takedown
+      & Complaints policy, Price Accuracy disclaimer ("prices are provided
+      by retailers/users and may change; verify at store"), Affiliate/
+      sponsorship disclosure (mark paid placements clearly, never mix
+      sponsored results into organic ranking without a label).
+    - Footer must show: legal entity name, CR number, address, contact email.
+    - Content rules for user submissions (receipt photos, price reports):
+      licence grant to us, moderation, no personal data in receipts (auto-
+      blur card numbers/loyalty IDs/names), no defamatory content (Penal Code
+      + Cybercrime Law expose publishers of defamation/false news -
+      moderation and reporting are mandatory).
+    - Prohibited content: do not display alcohol or pork products
+      prominently if they are sold in licensed outlets only - Qatar restricts
+      alcohol sales (licensed outlets such as QDC / hotels only). DECISION
+      [LEGAL]: default is to EXCLUDE alcohol and tobacco/vape-restricted
+      categories from v1 entirely; counsel to confirm the treatment of pork
+      (sold in restricted sections) and tobacco price display/advertising
+      (Tobacco Control Law No. 10 of 2016 restricts promotion).
+    - Content moderation & cultural norms: no content contrary to public
+      morals or Islamic values; moderation queue for user text.
+    DONE WHEN: documents drafted, reviewed by counsel, and stored in
+    /docs/legal/ with version numbers; consent & acceptance UX approved.
+
+0.6 Source research & Source Registry
+    Build a spreadsheet/DB table (later table `sources`) per grocer:
+    name, website/app, has public API?, has public flyer/PDF?, online shop?
+    prices differ by branch/delivery zone?, contact for partnerships, ToS
+    summary, robots.txt summary, legal status (RED/AMBER/GREEN), approved
+    method, refresh cadence, owner.
+    Action: write a short partnership pitch (value to grocer: traffic,
+    click-outs, analytics, promo placement) and email/visit each grocer's
+    commercial/marketing team. Track responses.
+    DONE WHEN: >= 10 grocers classified; >= 3 partnership conversations
+    started; method chosen for every MVP grocer.
+
+0.7 [LEGAL] Security baseline alignment
+    - Align with Qatar's national frameworks: NIA (National Information
+      Assurance) standard/policy from NCSA, NCSA cloud security guidance
+      (cloud services hosting data should be in-country / approved),
+      data classification. Even if not mandatory for us, use it as the
+      control checklist. Map controls in /docs/security/controls.md.
+    DONE WHEN: control mapping exists and gaps are ticketed.
+
+0.8 Consumer-facing compliance checklist for launch (go/no-go gate)
+    [ ] Entity + licence in place        [ ] Privacy/ToS in AR+EN live
+    [ ] Cookie consent working           [ ] DPIA + ROPA signed off
+    [ ] All live sources APPROVED        [ ] Takedown inbox monitored
+    [ ] Breach runbook rehearsed         [ ] Alcohol/tobacco rule enforced
+    [ ] Price disclaimers + timestamps   [ ] Sponsorship labelling rule live
+
+0.9 Data retention schedule (implement in Phase 8)
+    - Accounts: until deletion + 30 days backup purge.
+    - Search/basket history linked to account: 90 days rolling (user can turn
+      off / clear).
+    - Anonymous analytics: 13 months max, IP truncated.
+    - Server logs with IP: 30 days.
+    - Uploaded receipts: extract prices, delete image within 7 days.
+    - Price history (non-personal): kept indefinitely.
+
+
+================================================================================
+PHASE 1 - FOUNDATIONS: REPO, TOOLING, ENVIRONMENTS  (Weeks 1-2)
+================================================================================
+1.1 Repository layout (monorepo, pnpm + Turborepo)
+    /apps/web          Next.js 15 (App Router, TypeScript, Tailwind, next-intl)
+    /apps/api          NestJS (REST + OpenAPI; GraphQL not needed in v1)
+    /apps/admin        Internal admin (Next.js, protected) - source registry,
+                       match review queue, moderation, takedown switches
+    /services/ingest   Python 3.12 workers (Scrapy/Playwright only for
+                       APPROVED sources, CSV/API/PDF parsers, OCR)
+    /services/matcher  Python (product matching & normalisation)
+    /packages/shared   TS types, zod schemas, i18n strings
+    /infra             Terraform, Docker, GitHub Actions, k8s/Helm or
+                       Cloud Run configs
+    /docs              legal/, security/, architecture/, runbooks/, adr/
+    /plan.txt          THIS FILE (kept at repo root)
+    DONE WHEN: repo initialised, README with setup in < 15 min on clean PC.
+
+1.2 Tooling: Git + GitHub (private), branch protection (PR + 1 review + CI
+    green), Conventional Commits, ESLint/Prettier, Ruff/Black/mypy,
+    commitlint, pre-commit (incl. gitleaks secret scan), Dependabot,
+    CODEOWNERS (legal docs owned by Privacy Lead).
+    PR template includes checkbox: "Did this deviate from plan.txt? If yes,
+    CHANGE LOG entry added (CL-xxx)". CI job fails if a PR touching /infra,
+    /services/ingest or DB migrations has no plan.txt change OR the box
+    "No deviation" ticked.
+
+1.3 Environments: local (docker compose), dev, staging, prod. Separate cloud
+    projects/accounts per env, separate secrets, prod access via SSO + MFA.
+
+1.4 Local dev stack (docker-compose): postgres:16, redis:7, meilisearch,
+    [CHANGED - see CL-003] Azurite (Azure Blob emulator) instead of minio
+    [minio (S3-compatible) SUPERSEDED], mailpit. Commands are `pnpm up`,
+    `pnpm seed`, `pnpm test` instead of `make ...` [make SUPERSEDED].
+
+1.5 CI (GitHub Actions): lint, type-check, unit tests, build, dependency
+    audit (npm audit/pip-audit), SAST (CodeQL), container scan (Trivy),
+    IaC scan (tfsec/checkov), license check (no GPL surprises).
+    DONE WHEN: green pipeline on main; badges in README.
+
+
+================================================================================
+PHASE 2 - DATA MODEL & SOURCE REGISTRY  (Weeks 2-3)
+================================================================================
+2.1 Core tables (PostgreSQL 16; snake_case; UUIDv7 PKs; timestamptz UTC)
+    retailers(id, slug, name_en, name_ar, logo_license_status, website,
+              type[supermarket|hyper|marketplace|specialty], active)
+    sources(id, retailer_id, method[partner_feed|flyer|crowd|public_web|
+            manual], legal_status[green|amber|red|disabled], approval_ref,
+            tos_archive_url, robots_archive_url, refresh_cron, last_ok_at,
+            kill_switch bool)                       <- ties to policy P2/P6
+    branches(id, retailer_id, name, city, area, lat_approx, lng_approx,
+             delivery_zone_json)   -- approximate coords only
+    brands(id, name_en, name_ar)
+    categories(id, parent_id, slug, name_en, name_ar)   -- tree, ~3 levels
+    products(id, canonical_name_en, canonical_name_ar, brand_id, category_id,
+             gtin nullable, size_value, size_unit[g|kg|ml|l|pc], pack_count,
+             attributes jsonb, restricted bool, image_id nullable)
+    retailer_products(id, retailer_id, source_id, external_sku, raw_name,
+             raw_size, raw_url, product_id nullable, match_status[auto|
+             review|manual|rejected], match_score, first_seen, last_seen)
+    prices(id, retailer_product_id, branch_id nullable, price_qar numeric(10,2),
+           was_price_qar nullable, promo_type, promo_ends_at nullable,
+           in_stock bool, observed_at timestamptz, source_id, batch_id)
+           -- append-only; partition by month (pg_partman)
+    current_prices (materialised/updated table: latest price per
+           retailer_product_id+branch_id; indexed for search joins)
+    users(id, email citext unique, pw_hash argon2id, locale, created_at,
+          deleted_at), consents(user_id, purpose, granted, version, ts, ip_trunc)
+    baskets/basket_items, alerts, price_reports(user_id nullable, status),
+    audit_log(actor, action, entity, before, after, ts)
+    takedown_requests(id, retailer_id, received_at, resolved_at, action)
+    DONE WHEN: migrations (Prisma or Drizzle/Alembic - pick one, ADR) applied,
+    ERD in /docs/architecture/, seed script for categories and 2 fake
+    retailers.
+
+2.2 Normalised unit price: `unit_price = price / (size in base unit)` where
+    base = per 1 kg, per 1 L, per 1 piece; computed column + index. Keep the
+    raw strings ("2 x 500g", "1.5L", "12pc") and parse with tested regex +
+    unit tests (>= 200 real-world size strings).
+
+2.3 Currency/VAT: all prices QAR, as displayed to shoppers. Qatar had no VAT
+    at time of writing - keep a `tax_included` flag so a future VAT
+    introduction doesn't break data. Confirm with counsel/GTA.
+
+2.4 Arabic text handling: store NFC-normalised; search-normalised form
+    (strip tashkeel, unify alef/ya/ta marbuta, Arabic-Indic digits -> ASCII)
+    in separate column. Keep transliteration aliases (e.g. "Almarai" /
+    "المراعي" / "Al Marai").
+    DONE WHEN: unit tests cover normalisation & parsing.
+
+
+================================================================================
+PHASE 3 - DATA INGESTION PIPELINE  (Weeks 3-7; per-source work continues)
+================================================================================
+Design: each source = an adapter implementing
+   fetch() -> raw artefacts (stored immutable in object storage)
+   parse() -> list[RawOffer] (schema-validated)
+   emit()  -> queue messages
+A worker consumes, normalises, matches, upserts prices, updates
+current_prices, refreshes search index. Orchestrate with Prefect or
+Dagster (ADR) or simple Celery beat + Redis at MVP.
+
+3.1 Adapter framework & contract: RawOffer{source_id, external_sku, name,
+    size_text, price, was_price, promo_text, branch_hint, url, barcode?,
+    observed_at}. Pydantic validation; invalid rows to dead-letter table.
+3.2 Safety rails (enforce policy P2-P6 in code):
+    - adapter refuses to run unless source.legal_status='green' AND
+      kill_switch=false;
+    - global + per-domain rate limiter; honours robots.txt via library;
+    - User-Agent "QaribBot/1.0 (+https://<domain>/bot; legal@<domain>)";
+    - circuit breaker: 3 consecutive 403/429/CAPTCHA = auto-disable source +
+      alert (never attempt bypass);
+    - raw artefacts retained 90 days for audit.
+3.3 Adapters in order of legal preference:
+    A. Partner feed (CSV/JSON/SFTP/API) - easiest, most accurate.
+    B. Flyer/offers ingestion: retailers publish weekly flyers (PDF/images/
+       web). If licensed or counsel approves facts-extraction: PDF text
+       extraction (pdfplumber) + OCR (Tesseract ar+eng or cloud OCR in
+       Qatar region) -> human verification queue (admin UI) -> publish.
+    C. Crowd-sourced prices: users submit shelf tag / receipt photo; OCR
+       extracts items; blur PII; moderation + consensus (2+ independent
+       reports within 5% agree -> accept). Gamify with points (not cash) to
+       avoid incentive-to-fake issues. Mark these prices "community".
+    D. Public web pages (only approved): Playwright/Scrapy adapters,
+       polite crawling per P4.
+    E. Manual field team: student/intern/part-time checkers with a mobile
+       form to record shelf prices for baseline basket (150 staple SKUs)
+       monthly. Provides ground truth to audit automated sources.
+3.4 Branch/zone handling: many online shops price by delivery zone. Choose
+    v1 model: one "default Doha" price per retailer, plus branch-level where
+    available; UI shows "Prices for: <store/area>" selector (stored in
+    localStorage, not server, unless user logs in and opts in).
+3.5 Staleness policy: prices older than 7 days are greyed + "may be out of
+    date"; older than 30 days hidden from comparisons. Implemented in query
+    layer, not UI only.
+3.6 Monitoring per source: rows fetched, parse-fail %, price-change %,
+    outlier detection (z-score vs 30-day median; > 50% jump flagged to
+    review, not auto-published).
+    DONE WHEN: framework + 2 real approved sources (or partner sample feeds)
+    ingesting daily into staging with dashboards.
+
+
+================================================================================
+PHASE 4 - PRODUCT MATCHING & CATALOGUE (the hard part)  (Weeks 5-9)
+================================================================================
+Goal: same physical product from different grocers -> one canonical product.
+4.1 Matching cascade:
+    1) Exact GTIN/EAN barcode match (when source provides it).
+    2) Brand + normalised size + fuzzy name (rapidfuzz token_set_ratio,
+       pg_trgm) within category.
+    3) Embedding similarity (multilingual model e.g. multilingual-e5 /
+       LaBSE, self-hosted; vectors in pgvector) for Arabic<->English names.
+    4) LLM-assisted adjudication for borderline scores (0.80-0.92) with
+       strict JSON output - only product-name strings are sent, no personal
+       data (so no PDPPL transfer issue; if a non-Qatar API is used, log
+       this as a sub-processor). Keep fully optional behind feature flag.
+    Score >= 0.93 auto; 0.80-0.93 -> review queue; < 0.80 -> new product.
+4.2 Hard constraints to prevent false matches: size must match within 2%
+    (or be flagged "different size" and compared by unit price only), same
+    variant flags (low-fat, flavour, organic, pack count), brand equality.
+4.3 Attribute extraction: brand dictionary (AR/EN), size, fat %, flavour,
+    pack count -> attributes jsonb.
+4.4 Category classification: rules + small classifier; `restricted=true` for
+    alcohol/pork/tobacco categories -> excluded from all public endpoints
+    (enforced in a DB view `public_products`, not just UI).
+4.5 Admin review UI: side-by-side candidates, merge/split, audit log,
+    keyboard shortcuts (target 500 reviews/hour/person).
+4.6 Quality measurement: maintain a labelled gold set (1,000 pairs);
+    CI job computes precision/recall on every matcher change; block
+    regressions > 1pt.
+    DONE WHEN: >= 97% precision on gold set; review queue workflow in use.
+
+
+================================================================================
+PHASE 5 - SEARCH  (Weeks 6-8)
+================================================================================
+5.1 Index `products` + best/lowest current prices into Meilisearch (or
+    OpenSearch if scale demands): fields name_en, name_ar, normalised_ar,
+    brand, category, aliases, size; typo tolerance on; Arabic tokenisation
+    enabled; synonyms (e.g. "laban"/"لبن", "rice"/"رز"/"أرز").
+5.2 API: GET /v1/search?q=&lang=&area=&category=&sort=[price|unit_price|
+    relevance]&limit= ; returns products + per-retailer price list + min/max
+    + last_updated; cache in Redis 60 s; rate limit 60 req/min/IP.
+5.3 Autocomplete endpoint (<80 ms p95), popular searches (aggregated,
+    anonymous, k>=20 threshold so nothing is tied to a person).
+5.4 Ranking: relevance first, then availability of >= 2 retailers, then
+    popularity. Sponsored results (if ever) separate and labelled.
+5.5 Basket optimiser: given items + quantities, compute total per retailer
+    (and "best split across 2 stores" with a delivery/travel penalty
+    toggle). Pure function + tests; runs server-side, no personal data
+    stored unless user saves basket.
+    DONE WHEN: relevance test set (100 queries AR+EN) shows >= 90% top-3
+    hit; load test 200 rps passes p95 target.
+
+
+================================================================================
+PHASE 6 - BACKEND API  (Weeks 5-10, parallel with 5)
+================================================================================
+6.1 NestJS modules: auth, users, products, search, prices, baskets, alerts,
+    reports, retailers, admin, health. OpenAPI spec generated & published.
+6.2 Auth: email + password (argon2id) and/or passwordless magic link; optional
+    Google/Apple sign-in later. Short-lived JWT access + rotating refresh in
+    httpOnly, Secure, SameSite=Lax cookies. Rate-limit + lockout. Email
+    verification. NO social data import.
+6.3 Anonymous-first: search and compare need NO account. Account only for
+    saved baskets, alerts, contributions.
+6.4 Privacy APIs: GET /me/export (JSON zip), DELETE /me (soft delete then
+    hard purge job), PATCH /me/consents, GET/DELETE /me/history.
+6.5 Validation: zod/class-validator on all inputs; output DTOs only; no
+    ORM entities leaked. Parametrised queries only. OWASP ASVS L2 as the
+    test checklist; OWASP API Top 10 reviewed.
+6.6 Alerts: "tell me when X drops below Y QAR" - email (and Web Push
+    later), explicit opt-in, one-click unsubscribe, sending window rules
+    (respect local time; avoid prayer-time/night blasts as courtesy).
+    Sending commercial messages requires consent - keep consent records.
+6.7 Background jobs (BullMQ): alert evaluation, history compaction, export
+    generation, deletion purge, sitemap, index sync.
+6.8 Error model (RFC 7807), idempotency keys on POSTs, pagination cursors,
+    versioned /v1.
+    DONE WHEN: 80% unit coverage on services, contract tests green,
+    Postman/Bruno collection committed.
+
+
+================================================================================
+PHASE 7 - FRONTEND (WEB / PWA)  (Weeks 6-12)
+================================================================================
+7.1 Next.js App Router, server components for SEO pages, Tailwind + shadcn/ui,
+    next-intl for en/ar; `dir="rtl"` for Arabic using CSS logical properties
+    (margin-inline-start etc.); test every screen in both directions.
+    Fonts: a good Arabic face (Noto Sans Arabic / IBM Plex Sans Arabic).
+7.2 Key screens:
+    - Home: big search box, popular categories, weekly offers.
+    - Search results: product cards with lowest price, # of stores,
+      unit price badge.
+    - Product page: retailer price table (sortable), price-history chart,
+      "last updated" per row, promo badge, link-out (with affiliate
+      disclosure if used), report-wrong-price, set alert, add to basket.
+    - Basket: per-store totals, best-store banner, share link (no PII).
+    - Offers: flyers by retailer and validity dates.
+    - Account/privacy centre: consents, export, delete, history controls.
+    - Static: About, Terms, Privacy, Cookies, Contact, Takedown/Report.
+7.3 SEO & growth: SSR product pages, schema.org Product+Offer+AggregateOffer
+    markup, hreflang en/ar, sitemap, canonical URLs, clean slugs, OpenGraph
+    cards. Content targets queries like "milk price in Qatar".
+7.4 Performance & a11y: Core Web Vitals budget, image optimisation, route
+    prefetch, WCAG 2.2 AA (contrast, focus, screen reader labels in AR+EN).
+    Qatar mobile penetration is very high -> mobile-first design.
+7.5 PWA: installable, offline shell, cached last basket.
+7.6 Cookie/consent banner: strictly-necessary cookies only by default;
+    analytics/marketing only after opt-in (granular toggles, AR+EN, consent
+    stored with version). No analytics scripts load before consent.
+7.7 Analytics: self-hosted Plausible/Umami/Matomo in Qatar region, IP
+    anonymised, no cross-site tracking. Avoid Google Analytics / Meta Pixel
+    in v1 (cross-border + consent burden).
+7.8 Error tracking: self-hosted Sentry/GlitchTip with PII scrubbing.
+    DONE WHEN: Lighthouse mobile >= 90 perf/95 a11y/100 best-practices/SEO
+    >= 95; Arabic QA sign-off by native speaker; legal pages live.
+
+
+================================================================================
+PHASE 8 - SECURITY & PRIVACY ENGINEERING  (Weeks 8-13, continuous)
+================================================================================
+8.1 Threat model (STRIDE) for: auth, admin, ingestion, file uploads, API.
+    Doc in /docs/security/threat-model.md; update each major change.
+8.2 Controls:
+    - TLS 1.3, HSTS preload, CSP (strict, nonce-based), X-Frame-Options/
+      frame-ancestors, Referrer-Policy, Permissions-Policy, CSRF protection,
+      secure cookies, CORS allowlist.
+    - WAF + DDoS protection [CHANGED - CL-002]: Azure Application Gateway
+      WAF + Azure DDoS Network/IP Protection (in-region). If Cloudflare or
+      Front Door is ever added, it is a non-Qatar processor -> register as
+      sub-processor and get counsel's confirmation first.
+    - Secrets in Azure Key Vault; no secrets in git; rotation policy.
+    - DB: private network only, encrypted at rest (CMK), least-privilege
+      roles, separate role for ingestion vs API, row-level filtering through
+      `public_products` view, daily encrypted backups, PITR, quarterly
+      restore drill.
+    - File uploads (receipts): type/size checks, AV scan (ClamAV), strip
+      EXIF (GPS!), store private, signed URLs, auto-delete in 7 days.
+    - Admin: SSO + MFA, IP allowlist/VPN, full audit log, 4-eyes for
+      kill-switch overrides and legal status changes.
+    - Logging: structured, PII-free by default (no emails/tokens in logs),
+      IP truncation, 30-day retention.
+8.3 Privacy by design implementation: consent ledger, purpose tags on every
+    personal field in schema (comment + doc), automated retention jobs
+    (Section 0.9), export/delete automation tested end-to-end, test that
+    deleted users leave no residue (incl. search index, caches, backups
+    expiry policy).
+8.4 Testing: SAST/DAST (ZAP in CI against staging), dependency scanning,
+    pen test by an independent firm before launch (prefer a Qatar-based
+    firm vetted by NCSA), fix all High/Critical.
+8.5 Incident response runbook: roles, severity matrix, evidence preservation,
+    notification templates to NCGAA + users, regulator contact details,
+    tabletop exercise before launch.
+    DONE WHEN: pen-test report closed-out; retention jobs verified;
+    runbook exercise recorded.
+
+
+================================================================================
+PHASE 9 - INFRASTRUCTURE & DEPLOYMENT  (Weeks 8-14)
+================================================================================
+9.0 (NEW - CL-002) Azure Qatar Central service-availability spike (do in
+    Phase 1, week 1-2). Create a subscription + resource group in Qatar
+    Central and verify, by actually deploying a hello-world of each, that
+    these exist in-region: Container Apps (or App Service / AKS), Database
+    for PostgreSQL Flexible Server (HA zone-redundant? PITR? pgvector,
+    pg_trgm, pg_partman extensions), Azure Cache for Redis, Storage (Blob,
+    CMK), Key Vault, Application Gateway WAF (regional), Azure DNS, Service
+    Bus, Monitor/Log Analytics, Container Registry, Entra ID SSO/MFA.
+    Record results in /docs/architecture/azure-availability.md. Note any
+    service that is global-only (e.g. Front Door, Entra ID control plane):
+    list it as a sub-processor and get counsel's view on PDPPL transfer.
+    Check availability zones and paired-region/backup options - if no
+    in-country second region exists, keep backups in-region using zone-
+    redundant storage and record the residual risk.
+    DONE WHEN: availability doc committed; ADR-006 confirmed or amended.
+9.1 Cloud choice: Microsoft Azure, region Qatar Central [CHANGED - see
+    CL-002 / ADR-006; "Google Cloud Doha" option SUPERSEDED]. Keep the
+    architecture portable (containers, Terraform, standard Postgres/Redis)
+    so a move to another in-country provider is possible.
+9.2 Reference architecture (Azure, Qatar Central):
+      Users -> Azure DNS (.qa zone) -> Application Gateway v2 + WAF
+              (regional; in-country) [Front Door/CDN only if 9.0 + counsel
+              accept a global processor; otherwise none at MVP]
+        -> Azure Container Apps: web (Next.js), api (NestJS), admin
+           (behind Entra ID auth + IP restriction)
+        -> Azure Database for PostgreSQL Flexible Server 16 (zone-redundant
+           HA if available, private access via VNet/Private Endpoint, PITR,
+           CMK encryption)
+        -> Azure Cache for Redis
+        -> Meilisearch container on Container Apps/VM with Azure Disk
+           (or OpenSearch on AKS if scale demands)
+        -> Blob Storage (raw artefacts, receipts; private; CMK; lifecycle
+           rules for 7-day receipt deletion and 90-day raw retention)
+        -> Container Apps Jobs (cron): ingestion + matcher workers
+        -> Azure Service Bus (or Redis/BullMQ at MVP)
+        -> Key Vault (secrets/CMK), Azure Monitor + Log Analytics + App
+           Insights (PII scrubbed, region-pinned), Azure Container Registry
+        -> VNet with private endpoints; NSGs; no public DB/Redis/Storage
+    Fallback if Container Apps is missing in Qatar Central: AKS or App
+    Service for Containers in-region; record in Change Log.
+9.3 IaC: everything in Terraform (remote state, locked), modules per env.
+    No console click-ops in staging/prod. Drift detection weekly.
+9.4 CI/CD (GitHub Actions, OIDC federated credentials to Azure Entra app
+    registration - no long-lived keys; Terraform azurerm provider with state
+    in a locked Blob container) [CHANGED - CL-002]:
+    PR -> lint/test/scan -> build images (SBOM + cosign sign) -> deploy to
+    dev automatically -> staging on merge to main -> prod via manual
+    approval (release tag). DB migrations run as a separate gated step with
+    backward-compatible (expand/contract) changes. Blue/green or canary
+    10% for 10 min with automatic rollback on error-rate SLO breach.
+9.5 Observability: OpenTelemetry traces, Prometheus/Grafana or cloud-native
+    dashboards, uptime checks (external), SLOs: API availability 99.5%,
+    search p95 < 300 ms, data freshness SLO per source. Alerts to on-call
+    (PagerDuty/Opsgenie/WhatsApp-bridge) with runbook links.
+9.6 Domains & email: Azure DNS zone for the .qa domain (ADR-005; DNSSEC if
+    the .qa registry supports it), SPF/DKIM/DMARC, transactional email via
+    an approved provider (DPA signed; prefer in-region SMTP relay or a
+    provider with documented safeguards), separate sending domain.
+9.7 Cost guardrails: budgets + alerts; estimated MVP monthly cost target
+    USD 400-900 (Postgres HA, Redis, 2-3 run services, search node,
+    storage, egress). Revisit monthly; log in Decision Log if changed.
+9.8 Disaster recovery: RPO <= 15 min (PITR), RTO <= 4 h; backups copied to a
+    second in-country location; annual DR test.
+9.9 Environments promotion checklist (staging -> prod): migrations dry-run,
+    smoke tests, load test, security headers scan, legal pages versions
+    verified, source kill-switch verified, rollback rehearsed.
+    DONE WHEN: one-click reproducible deploy from scratch in a fresh project;
+    rollback tested; dashboards & alerts live.
+
+
+================================================================================
+PHASE 10 - QA & PRE-LAUNCH  (Weeks 12-15)
+================================================================================
+10.1 Test pyramid: unit (70%), integration with real Postgres via
+     testcontainers (20%), E2E Playwright in EN+AR, mobile viewports (10%).
+10.2 Data QA: field team audits 300 random prices vs shelf; target >= 95%
+     within 1 QAR / exact for promos. Publish accuracy internally weekly.
+10.3 Load & chaos: k6 200 rps search, 50 rps product pages; kill DB replica,
+     Redis, a worker; verify graceful degradation (stale-but-available).
+10.4 Usability tests: 10 users (5 AR, 5 EN) doing 5 tasks; fix top issues.
+10.5 Legal go-live gate: walk checklist 0.8 with counsel; sign-off recorded
+     in Change Log as "CL-xxx Legal go-live approval".
+10.6 Soft launch: invite-only beta (100-300 users), monitor support inbox,
+     source blocks, data complaints; 2-4 weeks.
+     DONE WHEN: exit criteria (metrics 1.4) met or explicitly waived via CL.
+
+
+================================================================================
+PHASE 11 - PUBLIC LAUNCH & OPERATIONS  (Week 16+)
+================================================================================
+11.1 Launch: announce via Qatar-focused communities (Reddit r/Qatar,
+     Facebook groups, LinkedIn, Instagram, WhatsApp shares), local press and
+     consumer channels; comply with advertising rules (no misleading
+     "cheapest in Qatar" claims unless substantiated per retailer/basket;
+     include methodology page and date).
+11.2 Operations rhythm:
+     Daily  : ingestion health review, takedown inbox, review queue.
+     Weekly : accuracy audit, release, cost review, legal-source review.
+     Monthly: retention/purge verification, access review, dependency
+              updates, restore test (quarterly), privacy request stats.
+     Annual : pen test, DPIA refresh, policy review, DR test.
+11.3 Support: in-app "Contact", email, SLA 2 business days; macros in AR/EN;
+     dispute path for retailers ("claim your store": verified retailers can
+     correct their own prices/branches - great for partnership pipeline).
+11.4 Monetisation options (each needs [LEGAL] review & disclosure):
+     affiliate click-outs, retailer promoted placements (clearly labelled,
+     never alters organic price ordering), retailer dashboards/insights
+     (aggregated, no personal data), brand analytics. Never sell personal
+     data. Never take payment from a retailer to hide competitors' prices.
+11.5 Roadmap after v1: barcode scanner, native apps (React Native), more
+     cities, pharmacy/household categories (check licensing), price-drop
+     push notifications, loyalty-card price support via partnership,
+     Hindi/Urdu/Malayalam/Tagalog/Bengali UI, WhatsApp bot (check WhatsApp
+     Business policy + PDPPL for messaging consent).
+
+
+================================================================================
+APPENDIX 1 - RISK REGISTER (update during Weekly review)
+================================================================================
+ID  Risk                                  L   I   Mitigation / Owner
+R1  Retailer C&D / block over data use    H   H   Partnership-first, P1-P6,
+                                                 kill-switch, counsel
+R2  Wrong price shown -> consumer harm    M   H   Timestamps, staleness
+                                                 rules, outlier review,
+                                                 disclaimers, fast correction
+R3  PDPPL breach / non-compliance         L   H   Data minimisation,
+                                                 Qatar hosting, DPIA,
+                                                 runbook
+R4  Low match accuracy                    M   H   Gold set, review queue,
+                                                 size/brand constraints
+R5  Data coverage too thin to be useful   H   M   Start with staples basket,
+                                                 crowd + field team
+R6  Copyright claim on images/flyers      M   M   No third-party images
+                                                 without licence
+R7  Competition-law concerns              L   H   Only public current
+                                                 prices, counsel advice
+R8  Alcohol/tobacco/pork display issue    M   H   Hard exclusion in DB view
+R9  Cloud region/service gaps in Qatar    M   M   Early spike in Phase 1,
+                                                 ADR fallback
+R10 Key-person / intern turnover          H   M   Docs, this plan, runbooks
+R11 Cost overrun                          M   L   Budgets, alerts
+R12 User-submitted defamatory/false info  M   M   Moderation, reporting,
+                                                 ToS
+
+================================================================================
+APPENDIX 2 - TIMELINE SUMMARY (assumes team of ~4: 2 full-stack, 1 data/ML,
+1 product/ops part-time; adjust and log changes)
+================================================================================
+Weeks  0-4  Phase 0 (legal/business)   || Weeks 1-2 Phase 1 (foundations)
+Weeks  2-3  Phase 2 (data model)
+Weeks  3-7  Phase 3 (ingestion)        || Weeks 5-9 Phase 4 (matching)
+Weeks  6-8  Phase 5 (search)           || Weeks 5-10 Phase 6 (API)
+Weeks  6-12 Phase 7 (frontend)
+Weeks  8-13 Phase 8 (security/privacy) || Weeks 8-14 Phase 9 (infra/deploy)
+Weeks 12-15 Phase 10 (QA, beta)
+Week  16+   Phase 11 (launch & ops)
+
+================================================================================
+APPENDIX 3 - DEFINITION OF DONE (any step)
+================================================================================
+[ ] Code merged via reviewed PR, CI green
+[ ] Tests added/updated, coverage not reduced
+[ ] Docs/runbook updated
+[ ] Security & privacy impact considered (new personal data? new vendor?
+    -> update ROPA, DPIA, sub-processor register, privacy notice)
+[ ] Deviation from plan.txt? -> Change Log + Decision Log updated
+[ ] Feature flagged if user-facing and risky
+
+================================================================================
+APPENDIX 4 - GLOSSARY / KEY REFERENCES (verify current versions)
+================================================================================
+PDPPL  : Law No. 13 of 2016 on Personal Data Privacy Protection
+NCSA   : National Cyber Security Agency; NCGAA its governance/assurance arm
+Cybercrime Law : Law No. 14 of 2014
+Consumer Protection : Law No. 8 of 2008
+E-Commerce : Decree-Law No. 16 of 2010
+Copyright : Law No. 7 of 2002
+Competition : Law No. 19 of 2006
+Tobacco control : Law No. 10 of 2016 (confirm)
+MoCI   : Ministry of Commerce and Industry
+CRA    : Communications Regulatory Authority (.qa domains, telecom)
+GTIN   : Global Trade Item Number (barcode)
+ADR    : Architecture Decision Record
+ROPA   : Record of Processing Activities
+DPIA   : Data Protection Impact Assessment
+Sources: almeezan.qa (laws), compliance.qcert.org / ncsa.gov.qa (guidelines)
+================================================================================
+END OF PLAN v1.0  (append changes to Section A - never edit silently)
+================================================================================

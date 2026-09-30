@@ -1,0 +1,4 @@
+# Allow the publicly documented Azurite (Azure Storage emulator) development key.
+[allowlist]
+description = "Azurite well-known dev account key"
+regexes = ['''Eby8vdM02xNOcqFlqUwJPLlmEtlCDXJ1OUzFT50uSRZ6IFsuFq2UVErCz4I6tq/K1SZFPTOtr/KBHBeksoGMGw==''']

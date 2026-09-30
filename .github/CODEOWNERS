@@ -1,0 +1,8 @@
+# Replace the placeholder handles with real GitHub users/teams.
+# Legal/privacy docs are owned by the Privacy Lead (plan 1.2).
+*                     @YUSUF-ARSLAN-DEV
+/docs/legal/          @PRIVACY-LEAD-PLACEHOLDER
+/docs/security/       @YUSUF-ARSLAN-DEV
+/infra/               @YUSUF-ARSLAN-DEV
+/services/ingest/     @YUSUF-ARSLAN-DEV
+/plan.txt             @YUSUF-ARSLAN-DEV

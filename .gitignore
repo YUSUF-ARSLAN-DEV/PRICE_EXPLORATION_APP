@@ -1,0 +1,36 @@
+plan
+
+# --- dependencies / build ---
+node_modules/
+.next/
+dist/
+build/
+coverage/
+.turbo/
+*.tsbuildinfo
+# --- python ---
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+# --- env / secrets (NEVER commit) ---
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.pfx
+# --- terraform ---
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfvars
+!*.tfvars.example
+# --- os / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json

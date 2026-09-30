@@ -1,0 +1,52 @@
+name: qarib
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-qarib}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qarib_local_only}
+      POSTGRES_DB: ${POSTGRES_DB:-qarib}
+    ports: ['5432:5432']
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./infra/docker/postgres-init.sql:/docker-entrypoint-initdb.d/00-init.sql:ro
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U $${POSTGRES_USER:-qarib}']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports: ['6379:6379']
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  meilisearch:
+    image: getmeili/meilisearch:v1.11
+    environment:
+      MEILI_MASTER_KEY: ${MEILI_MASTER_KEY:-local_master_key_change_me_32chars_min}
+      MEILI_ENV: development
+      MEILI_NO_ANALYTICS: 'true'
+    ports: ['7700:7700']
+    volumes: [meilidata:/meili_data]
+
+  azurite:
+    # Azure Blob emulator - matches production storage (ADR-006). Replaced MinIO, whose public
+    # images are no longer pullable (see CL-003).
+    image: mcr.microsoft.com/azure-storage/azurite:latest
+    command: azurite-blob --blobHost 0.0.0.0 --skipApiVersionCheck
+    ports: ['10000:10000']
+    volumes: [azuritedata:/data]
+
+  mailpit:
+    image: axllent/mailpit:latest
+    ports: ['1025:1025', '8025:8025']
+
+volumes:
+  pgdata:
+  meilidata:
+  azuritedata:
