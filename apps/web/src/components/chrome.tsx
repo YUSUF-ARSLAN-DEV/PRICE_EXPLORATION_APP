@@ -59,10 +59,11 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dict }) {
           ) : ready ? (
             item('/login', dict.nav.login)
           ) : (
-            // reserve the space while the session is being checked (prevents layout shift)
-            <span aria-hidden="true" style={{ visibility: 'hidden' }}>
+            // reserve the exact space while the session is being checked (same element + styles as the
+            // real link, so the header never changes height after hydration)
+            <a aria-hidden="true" tabIndex={-1} style={{ visibility: 'hidden' }}>
               {dict.nav.login}
-            </span>
+            </a>
           )}
           <Link href={switchHref} lang={other} hrefLang={other} aria-label={dict.nav.languageLabel}>
             {dict.nav.language}
