@@ -1,0 +1,8 @@
+{
+  "pairs": 1015,
+  "positives": 825,
+  "negatives": 190,
+  "auto_precision": 1.0,
+  "auto_recall_same_language": 1.0,
+  "candidate_recall_all": 1.0
+}

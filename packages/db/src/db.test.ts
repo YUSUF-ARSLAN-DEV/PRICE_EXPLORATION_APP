@@ -963,7 +963,7 @@ describe('seed', () => {
         c,
         `select count(*) n from categories where restricted`,
       );
-      assert.equal(restricted.n, '1');
+      assert.equal(restricted.n, '2', 'alcohol/tobacco + pork');
       assert.equal(
         (await c.query('select 1 from public_offers')).rowCount,
         0,

@@ -2,7 +2,7 @@
 QATAR GROCERY PRICE COMPARISON APP - MASTER BUILD & DEPLOYMENT PLAN
 Working name: "Qarib" (placeholder - rename freely; check trademark with MoCI first)
 ================================================================================
-Plan version : 1.4 (see Change Log CL-005; progress in Section C)
+Plan version : 1.5 (see Change Log CL-006; progress in Section C)
 Created      : 2026-09-30
 Status       : DRAFT - awaiting legal review (see Phase 0)
 
@@ -155,6 +155,41 @@ CL-005 | 2026-09-30 | Claude (on owner's instruction) | Phase 3 (3.1, 3.2, 3.3 A
        |     retailer was contacted.
        | Why: implementing the plan | Impact: see Section C.
 
+CL-006 | 2026-09-30 | Claude (on owner's instruction: "build all phases, do not ask") |
+       | Phase 4 (4.1-4.6), Phase 3 step 3.3 B (partial), migration 0008, CI |
+       | Owner asked for the remaining phases to be built without further questions;
+       | changes are committed and pushed to master at phase boundaries.
+       |  a) Phase 4 DONE (code + tests): services/matcher - attribute extraction
+       |     (brand EN/AR, size in names, variants, flavour, category rules incl.
+       |     alcohol/tobacco/pork-heuristic restricted classes), scoring with hard
+       |     constraints (brand, size +-2% and pack count, conflicting/one-sided
+       |     critical variants, category), cascade engine (exact GTIN -> fuzzy ->
+       |     optional embedding -> optional LLM -> new product), review queue
+       |     (match_candidates, decide/reject/split/merge SQL functions, audited),
+       |     brand dictionary sync, gold-set evaluation with baseline regression
+       |     guard. Barcode now stored on retailer_products (ingest pipeline).
+       |  b) CAVEATS: the gold set (1,015 pairs) is SYNTHETIC - generated from a
+       |     15-entry hand-written catalogue - and the dictionaries were tuned
+       |     against it (perfect scores are NOT evidence of real-world accuracy).
+       |     It guards regressions only; replace with audited real pairs (4.6).
+       |     The embedding tier default (NgramHashEmbedder) is lexical only; the
+       |     multilingual model (SentenceTransformerEmbedder) and the Anthropic
+       |     LLM adjudicator are implemented but NOT exercised against real
+       |     models/APIs. The LLM tier is a non-Qatar processor: needs counsel
+       |     approval + subprocessors.md entry before enabling. Pork detection is
+       |     a conservative keyword heuristic pending counsel (step 0.5).
+       |     Cross-language (AR<->EN) matches never auto-match (capped at 0.88):
+       |     they go to human review. The matcher depends on qarib-ingest
+       |     (shared normalisers): install with `pip install -e ../ingest -e .`.
+       |     Admin review UI is Phase 6/7 (only SQL functions exist now).
+       |  c) Phase 3 3.3 B: flyer text parser + staged_offers human-verification
+       |     queue (release/reject functions) DONE; PDF text via optional
+       |     pdfplumber; OCR for image-only flyers NOT done.
+       |  d) CI: fixed pnpm/action-setup "multiple versions" error (removed
+       |     version: 9); python job installs ../ingest first and runs mypy on
+       |     tests. Earlier master CI runs had failed on that (node + audit jobs).
+       | Why: implementing the plan | Impact: see Section C.
+
 (add new entries below this line)
 
 
@@ -162,7 +197,7 @@ CL-005 | 2026-09-30 | Claude (on owner's instruction) | Phase 3 (3.1, 3.2, 3.3 A
 SECTION C - PROGRESS TRACKER (update statuses as work proceeds)
 --------------------------------------------------------------------------------
 Status values: TODO | IN PROGRESS | DRAFTED (awaiting review) | DONE | BLOCKED
-Last updated: 2026-09-30 (CL-005)
+Last updated: 2026-09-30 (CL-006)
 
 Phase 0
   0.1 Engage counsel ............ TODO (human) - brief ready: docs/legal/counsel-brief.md
@@ -192,7 +227,7 @@ Phase 3 (IN PROGRESS - core done, see CL-005)
   3.1 Adapter framework ......... DONE
   3.2 Safety rails .............. DONE (code + tests)
   3.3 A Partner feeds ........... DONE (CSV/JSON; SFTP TODO)
-  3.3 B Flyers + OCR ............ TODO
+  3.3 B Flyers + OCR ............ PARTIAL - text parser + verification queue done; OCR TODO
   3.3 C Crowd receipts .......... TODO
   3.3 D Approved public web ..... TODO (blocked: no approved source; fetcher ready)
   3.3 E Field team form ......... TODO
@@ -200,7 +235,14 @@ Phase 3 (IN PROGRESS - core done, see CL-005)
   3.5 Staleness policy .......... DONE (public_offers view, Phase 2)
   3.6 Monitoring / outliers ..... PARTIAL - outlier hold + source_health view done;
                                    dashboards and alert delivery TODO
-Phases 4-11 ..................... TODO
+Phase 4 (DONE - see CL-006 caveats)
+  4.1 Matching cascade .......... DONE (embedding/LLM tiers untested against real models)
+  4.2 Hard constraints .......... DONE
+  4.3 Attribute extraction ...... DONE (starter dictionaries)
+  4.4 Category + restricted ..... DONE (DB view + classifier)
+  4.5 Admin review UI ........... PARTIAL - SQL functions; UI in Phase 6/7
+  4.6 Gold set + CI gate ........ DONE but synthetic (see caveats)
+Phases 5-11 ..................... TODO
 
 --------------------------------------------------------------------------------
 SECTION B - DECISION LOG (ADR summary, append-only)

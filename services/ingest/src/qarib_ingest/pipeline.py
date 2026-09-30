@@ -19,6 +19,7 @@ from .normalize import normalize_search
 
 log = logging.getLogger(__name__)
 
+_BARCODE = re.compile(r"^[0-9]{8,14}$")
 _ZERO_UUID = "00000000-0000-0000-0000-000000000000"
 _MULTIBUY = re.compile(r"\b(buy\s*\d+|\d+\s*for\b|\d+\s*x\s*\d+\s*offer|b\d+g\d+)", re.IGNORECASE)
 
@@ -119,13 +120,14 @@ def publish_offers(
                 listing = conn.execute(
                     """insert into retailer_products
                          (retailer_id, source_id, external_sku, raw_name, raw_name_normalised,
-                          raw_size, raw_url, match_status)
-                       values (%s, %s, %s, %s, %s, %s, %s, 'review')
+                          raw_size, raw_url, barcode, match_status)
+                       values (%s, %s, %s, %s, %s, %s, %s, %s, 'review')
                        on conflict (source_id, external_sku) do update set
                          raw_name = excluded.raw_name,
                          raw_name_normalised = excluded.raw_name_normalised,
                          raw_size = excluded.raw_size,
-                         raw_url = coalesce(excluded.raw_url, retailer_products.raw_url)
+                         raw_url = coalesce(excluded.raw_url, retailer_products.raw_url),
+                         barcode = coalesce(excluded.barcode, retailer_products.barcode)
                        returning id, (xmax = 0) as inserted""",
                     (
                         retailer_id,
@@ -135,6 +137,7 @@ def publish_offers(
                         normalize_search(offer.name),
                         offer.size_text,
                         offer.url,
+                        offer.barcode if offer.barcode and _BARCODE.match(offer.barcode) else None,
                     ),
                 ).fetchone()
                 assert listing is not None
