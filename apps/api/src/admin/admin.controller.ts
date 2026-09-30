@@ -17,6 +17,7 @@ import {
   decideMatchBody,
   killSwitchBody,
   mergeBody,
+  decideClaimBody,
   resolveTakedownBody,
   sourceChangeBody,
   takedownBody,
@@ -300,6 +301,36 @@ export class AdminController {
       [id],
     );
     if (!r.length) throw new NotFoundException('Pending report not found');
+    return { ok: true };
+  }
+
+  // ---- retailer claims (plan 11.3) -------------------------------------------------------------
+  @Get('claims')
+  claims(
+    @Query(new ZodPipe(z.object({ open: z.coerce.boolean().default(true) }))) q: { open: boolean },
+  ) {
+    return this.db.query(
+      `select * from retailer_claims where ($1::boolean is false or status in ('new', 'verifying')) order by received_at desc limit 200`,
+      [q.open],
+    );
+  }
+
+  /** Verifying/verified/rejected. A decision needs a written reason (enforced in SQL) and is audited. */
+  @Post('claims/:id/decide')
+  @HttpCode(200)
+  @ApiZodBody(decideClaimBody)
+  async decideClaim(
+    @Req() req: AuthedRequest,
+    @Param('id', uuidParam) id: string,
+    @Body(new ZodPipe(decideClaimBody)) b: ReturnType<typeof decideClaimBody.parse>,
+  ) {
+    await this.db.query('select decide_retailer_claim($1, $2::claim_status, $3, $4, $5)', [
+      id,
+      b.decision,
+      this.actor(req),
+      b.notes ?? null,
+      b.retailer_id ?? null,
+    ]);
     return { ok: true };
   }
 

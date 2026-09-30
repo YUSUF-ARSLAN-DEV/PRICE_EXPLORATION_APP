@@ -164,3 +164,14 @@ describe('price chart geometry', () => {
     expect(flat.series[0]!.points).not.toMatch(/NaN/);
   });
 });
+
+describe('indexingEnabled (soft-launch switch)', () => {
+  it('is on by default and only SITE_INDEXING=off (any case) turns it off', async () => {
+    const { indexingEnabled } = await import('./indexing');
+    expect(indexingEnabled({})).toBe(true);
+    expect(indexingEnabled({ SITE_INDEXING: 'on' })).toBe(true);
+    expect(indexingEnabled({ SITE_INDEXING: 'off' })).toBe(false);
+    expect(indexingEnabled({ SITE_INDEXING: 'OFF' })).toBe(false);
+    expect(indexingEnabled({ SITE_INDEXING: 'false' })).toBe(true); // only the documented value disables
+  });
+});

@@ -3,7 +3,9 @@ import { LOCALES, T, acceptCookies } from './helpers';
 
 for (const locale of LOCALES) {
   test.describe(`public journey (${locale})`, () => {
-    test('home -> search -> product: prices from several stores, cheapest flagged, JSON-LD present', async ({ page }) => {
+    test('home -> search -> product: prices from several stores, cheapest flagged, JSON-LD present', async ({
+      page,
+    }) => {
       await page.goto(`/${locale}`);
       await expect(page.locator('html')).toHaveAttribute('lang', locale);
       await expect(page.locator('html')).toHaveAttribute('dir', locale === 'ar' ? 'rtl' : 'ltr');
@@ -39,12 +41,17 @@ for (const locale of LOCALES) {
     test('language switch keeps the current page', async ({ page }) => {
       await page.goto(`/${locale}/offers`);
       const other = locale === 'en' ? 'ar' : 'en';
-      await page.getByRole('navigation', { name: 'Main' }).locator(`a[hreflang="${other}"]`).click();
+      await page
+        .getByRole('navigation', { name: 'Main' })
+        .locator(`a[hreflang="${other}"]`)
+        .click();
       await expect(page).toHaveURL(new RegExp(`/${other}/offers$`));
       await expect(page.locator('html')).toHaveAttribute('dir', other === 'ar' ? 'rtl' : 'ltr');
     });
 
-    test('keyboard: skip link is the first tab stop and moves focus to the content', async ({ page }) => {
+    test('keyboard: skip link is the first tab stop and moves focus to the content', async ({
+      page,
+    }) => {
       await page.goto(`/${locale}`);
       await page.keyboard.press('Tab');
       const skip = page.locator('a.skip-link');
@@ -53,9 +60,13 @@ for (const locale of LOCALES) {
       await expect(page.locator('#main')).toBeFocused();
     });
 
-    test('empty search results and legal pages render a helpful page, not an error', async ({ page }) => {
+    test('empty search results and legal pages render a helpful page, not an error', async ({
+      page,
+    }) => {
       await page.goto(`/${locale}/search?q=zzzzzzzznothing`);
-      await expect(page.locator('main')).not.toContainText(/Internal Server Error|Application error/i);
+      await expect(page.locator('main')).not.toContainText(
+        /Internal Server Error|Application error/i,
+      );
       for (const p of ['terms', 'privacy', 'cookies', 'about', 'report']) {
         const res = await page.goto(`/${locale}/${p}`);
         expect(res!.status(), p).toBe(200);
@@ -73,7 +84,10 @@ test('an unknown product or locale is a 404, never a crash', async ({ page }) =>
 });
 
 test('first visit negotiates the language from the browser (Arabic)', async ({ browser }) => {
-  const ctx = await browser.newContext({ locale: 'ar-QA', extraHTTPHeaderOverrides: { 'accept-language': 'ar-QA,ar;q=0.9' } });
+  const ctx = await browser.newContext({
+    locale: 'ar-QA',
+    extraHTTPHeaderOverrides: { 'accept-language': 'ar-QA,ar;q=0.9' },
+  });
   const page = await ctx.newPage();
   await page.goto('/');
   await expect(page).toHaveURL(/\/ar$/);

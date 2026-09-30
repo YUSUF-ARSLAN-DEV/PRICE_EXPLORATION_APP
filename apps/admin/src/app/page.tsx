@@ -216,6 +216,37 @@ const QUEUES: Queue[] = [
     ],
   },
   {
+    key: 'claims',
+    title: 'Retailer claims',
+    hint: 'Verify by calling back a number from the company own website, never the one in the form (docs/runbooks/retailer-onboarding.md). A decision needs a written reason.',
+    load: () => api<Row[]>('/admin/claims'),
+    columns: [
+      { label: 'Received', cell: (r) => s(r.received_at).slice(0, 16) },
+      { label: 'Company', cell: (r) => `${s(r.company_name)} ${s(r.website)}` },
+      { label: 'Contact', cell: (r) => `${s(r.contact_name)} <${s(r.contact_email)}>` },
+      { label: 'Message', cell: (r) => s(r.message) },
+      { label: 'Status', cell: (r) => s(r.status) },
+    ],
+    actions: () => [
+      {
+        label: 'Verifying',
+        prompt: 'Notes',
+        run: (x, notes) => post(`/admin/claims/${x.id}/decide`, { decision: 'verifying', notes }),
+      },
+      {
+        label: 'Verified',
+        prompt: 'How was this verified?',
+        run: (x, notes) => post(`/admin/claims/${x.id}/decide`, { decision: 'verified', notes }),
+      },
+      {
+        label: 'Reject',
+        danger: true,
+        prompt: 'Reason',
+        run: (x, notes) => post(`/admin/claims/${x.id}/decide`, { decision: 'rejected', notes }),
+      },
+    ],
+  },
+  {
     key: 'dead',
     title: 'Dead letters',
     hint: 'Rows that failed validation during ingestion (last 50).',

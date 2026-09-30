@@ -744,6 +744,8 @@ describe('privacy', () => {
         ['price_reports', 'receipt_blob_path'],
         ['takedown_requests', 'requester_name'],
         ['takedown_requests', 'requester_email'],
+        ['retailer_claims', 'contact_name'],
+        ['retailer_claims', 'contact_email'],
       ];
       for (const [table, col] of expected) {
         const r = await one<{ d: string | null }>(
@@ -1039,6 +1041,7 @@ describe('database roles', () => {
       'refresh_tokens',
       'idempotency_keys',
       'takedown_requests',
+      'retailer_claims',
     ];
     for (const table of personal) {
       assert.equal(
@@ -1135,6 +1138,103 @@ describe('database roles', () => {
 });
 
 // ---- privacy: erasure completeness + schema-drift guard (plan 8.3) ----------------------------------
+describe('retailer claims (plan 11.3)', () => {
+  const claim = (c: Client, email = 'buyer@retailer.example') =>
+    one<{ id: string }>(
+      c,
+      `insert into retailer_claims (company_name, contact_name, contact_email, website)
+       values ('Example Mart WLL', 'Sara Buyer', $1, 'https://retailer.example') returning id`,
+      [email],
+    );
+
+  dbTest(
+    'constraints: bad e-mail / website rejected; status and decision time must agree',
+    async (c) => {
+      await tx(c, async () => {
+        await rejects(
+          c,
+          `insert into retailer_claims (company_name, contact_name, contact_email) values ('Ex Co', 'Sara', 'not-an-email')`,
+          [],
+          /retailer_claims_contact_email_check/,
+        );
+        await rejects(
+          c,
+          `insert into retailer_claims (company_name, contact_name, contact_email, website) values ('Ex Co', 'Sara', 'a@b.co', 'javascript:alert(1)')`,
+          [],
+          /retailer_claims_website_check/,
+        );
+        const { id } = await claim(c);
+        await rejects(
+          c,
+          `update retailer_claims set status = 'verified' where id = $1`,
+          [id],
+          /retailer_claims_check/,
+        );
+      });
+    },
+  );
+
+  dbTest('decisions need a written reason, are audited, and cannot be made twice', async (c) => {
+    await tx(c, async () => {
+      const { id } = await claim(c);
+      await rejects(
+        c,
+        `select decide_retailer_claim($1, 'verified', 'admin@x', 'ok')`,
+        [id],
+        /written reason/,
+      );
+      await c.query(`select decide_retailer_claim($1, 'verifying', 'admin@x', null)`, [id]);
+      await c.query(
+        `select decide_retailer_claim($1, 'verified', 'admin@x', 'called back, domain matches')`,
+        [id],
+      );
+      const row = await one<{ status: string; decided_by: string }>(
+        c,
+        'select status, decided_by from retailer_claims where id = $1',
+        [id],
+      );
+      assert.deepEqual([row.status, row.decided_by], ['verified', 'admin@x']);
+      const audit = await one<{ n: string }>(
+        c,
+        `select count(*) n from audit_log where entity_type = 'retailer_claims' and entity_id = $1 and action = 'claim_verified'`,
+        [id],
+      );
+      assert.equal(audit.n, '1');
+      await rejects(
+        c,
+        `select decide_retailer_claim($1, 'rejected', 'admin@x', 'changed my mind')`,
+        [id],
+        /open claim not found/,
+      );
+    });
+  });
+
+  dbTest(
+    'retention: open and rejected claims expire after 12 months, verified ones are kept',
+    async (c) => {
+      await tx(c, async () => {
+        const old = await claim(c, 'old@retailer.example');
+        const kept = await claim(c, 'kept@retailer.example');
+        const fresh = await claim(c, 'fresh@retailer.example');
+        await c.query(
+          `select decide_retailer_claim($1, 'verified', 'admin@x', 'verified by phone')`,
+          [kept.id],
+        );
+        await c.query(
+          `update retailer_claims set received_at = now() - interval '13 months' where id = any($1)`,
+          [[old.id, kept.id]],
+        );
+        const purged = await one<{ n: number }>(c, 'select purge_retailer_claims() n');
+        assert.equal(purged.n, 1);
+        const left = await c.query('select id from retailer_claims where id = any($1)', [
+          [old.id, kept.id, fresh.id],
+        ]);
+        assert.deepEqual(left.rows.map((r) => r.id).sort(), [kept.id, fresh.id].sort());
+      });
+    },
+  );
+});
+
 describe('personal-data drift guard', () => {
   // Every table that references a user. Adding a table here means: include it in GET /me/export,
   // erase_user(), docs/legal/ropa.md and the retention schedule - THEN update this list.

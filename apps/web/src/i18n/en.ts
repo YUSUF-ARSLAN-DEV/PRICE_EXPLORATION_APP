@@ -152,6 +152,7 @@ export const en = {
     cookies: 'Cookie policy',
     about: 'About & methodology',
     report: 'Report a problem / takedown',
+    retailers: 'For retailers',
     contact: 'Contact',
     draft: 'Legal texts are drafts pending review by Qatari counsel.',
   },
@@ -169,6 +170,22 @@ export const en = {
     summary: 'What should we know?',
     send: 'Send',
     done: 'Thank you. We will acknowledge your request within 1 business day.',
+  },
+  retailers: {
+    title: 'For retailers: claim your store',
+    intro:
+      'Qarib shows shoppers prices from many stores. If you run or represent a grocer, you can ask to supply an official price feed, correct your data, or have it removed. We only use prices that a retailer or partner has approved, or that the public can see and we are allowed to read.',
+    how: 'What happens next: we verify you by calling back a number from your company website (never the number in this form), agree what data flows and how, and record it. Submitting this form gives no access to anything.',
+    company: 'Company name',
+    website: 'Company website (optional)',
+    name: 'Your name',
+    email: 'Work email',
+    role: 'Your role (optional)',
+    message: 'How can we help? (optional)',
+    send: 'Send',
+    done: 'Thank you. A member of our team will contact you within 3 business days.',
+    privacy:
+      'We use these details only to contact you about this request, and delete them after 12 months unless we start working together.',
   },
   unsubscribe: {
     title: 'Unsubscribe from price alerts',

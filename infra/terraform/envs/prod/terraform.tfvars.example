@@ -41,3 +41,6 @@ legal_email       = "legal@example.qa"
 mail_from         = "Qarib <no-reply@example.qa>"
 smtp_host         = "smtp.example.qa"
 ingest_user_agent = "QaribBot/1.0 (+https://example.qa/bot; legal@example.qa)"
+
+# Soft launch (docs/runbooks/soft-launch.md): "off" until the beta reaches day 14.
+site_indexing = "off"

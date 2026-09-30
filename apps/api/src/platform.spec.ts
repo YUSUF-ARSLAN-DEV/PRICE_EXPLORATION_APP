@@ -52,9 +52,11 @@ describe('health and dependency failure (plan 10.3)', () => {
   });
 
   it('a database outage is a clean 503 problem document without connection details', async () => {
-    const spy = jest
-      .spyOn(t.db, 'query')
-      .mockRejectedValue(Object.assign(new Error('connect ECONNREFUSED 10.0.0.5:5432'), { code: 'ECONNREFUSED' }) as never);
+    const spy = jest.spyOn(t.db, 'query').mockRejectedValue(
+      Object.assign(new Error('connect ECONNREFUSED 10.0.0.5:5432'), {
+        code: 'ECONNREFUSED',
+      }) as never,
+    );
     const res = await request(t.server).get('/v1/health/ready').expect(503);
     spy.mockRestore();
     expect(res.headers['content-type']).toContain('problem+json');

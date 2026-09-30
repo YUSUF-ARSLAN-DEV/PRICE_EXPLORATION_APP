@@ -2,12 +2,39 @@ import { expect, test } from '@playwright/test';
 import { LOCALES, PASSWORD, acceptCookies, latestMail, tokenFrom, uniqEmail } from './helpers';
 
 const L = {
-  en: { email: 'Email', password: 'Password', terms: /I am 18 or older/, register: 'Create account', login: 'Sign in', registered: /Check your inbox/, verified: /Email confirmed/, export: 'Download my data', del: 'Delete my account', history: /Save my recent searches/, deletePw: 'Confirm with your password' },
-  ar: { email: 'البريد الإلكتروني', password: 'كلمة المرور', terms: /عمري 18 سنة/, register: 'إنشاء الحساب', login: 'دخول', registered: /تحقق من بريدك/, verified: /تم تأكيد البريد/, export: 'تنزيل بياناتي', del: 'حذف حسابي', history: /احفظ عمليات البحث/, deletePw: 'أكّد بكلمة المرور' },
+  en: {
+    email: 'Email',
+    password: 'Password',
+    terms: /I am 18 or older/,
+    register: 'Create account',
+    login: 'Sign in',
+    registered: /Check your inbox/,
+    verified: /Email confirmed/,
+    export: 'Download my data',
+    del: 'Delete my account',
+    history: /Save my recent searches/,
+    deletePw: 'Confirm with your password',
+  },
+  ar: {
+    email: 'البريد الإلكتروني',
+    password: 'كلمة المرور',
+    terms: /عمري 18 سنة/,
+    register: 'إنشاء الحساب',
+    login: 'دخول',
+    registered: /تحقق من بريدك/,
+    verified: /تم تأكيد البريد/,
+    export: 'تنزيل بياناتي',
+    del: 'حذف حسابي',
+    history: /احفظ عمليات البحث/,
+    deletePw: 'أكّد بكلمة المرور',
+  },
 } as const;
 
 for (const locale of LOCALES) {
-  test(`register -> verify email -> sign in -> privacy centre -> export -> delete (${locale})`, async ({ page, request }) => {
+  test(`register -> verify email -> sign in -> privacy centre -> export -> delete (${locale})`, async ({
+    page,
+    request,
+  }) => {
     const t = L[locale];
     const email = uniqEmail(`acct-${locale}`);
 
@@ -52,10 +79,17 @@ for (const locale of LOCALES) {
     await expect(page.getByRole('checkbox', { name: t.history })).toBeChecked();
 
     // ---- data export contains the user's data
-    const [download] = await Promise.all([page.waitForEvent('download'), page.getByRole('link', { name: t.export }).click()]);
-    const body = JSON.parse(await (await import('node:fs/promises')).readFile((await download.path())!, 'utf8'));
+    const [download] = await Promise.all([
+      page.waitForEvent('download'),
+      page.getByRole('link', { name: t.export }).click(),
+    ]);
+    const body = JSON.parse(
+      await (await import('node:fs/promises')).readFile((await download.path())!, 'utf8'),
+    );
     expect(body.user.email).toBe(email);
-    expect(body.consents.map((c: { purpose: string }) => c.purpose)).toEqual(expect.arrayContaining(['account_terms', 'history']));
+    expect(body.consents.map((c: { purpose: string }) => c.purpose)).toEqual(
+      expect.arrayContaining(['account_terms', 'history']),
+    );
 
     // ---- deletion needs the right password, then the account is gone
     await page.getByLabel(t.deletePw).fill('wrong-password-123');
@@ -65,16 +99,28 @@ for (const locale of LOCALES) {
     await page.getByRole('button', { name: t.del }).click();
     await expect(page).toHaveURL(new RegExp(`/${locale}$`));
 
-    const login = await request.post('/api/v1/auth/login', { data: { email, password: PASSWORD }, headers: { 'x-qarib-csrf': '1' } });
+    const login = await request.post('/api/v1/auth/login', {
+      data: { email, password: PASSWORD },
+      headers: { 'x-qarib-csrf': '1' },
+    });
     expect(login.status()).toBe(401);
   });
 }
 
-test('a signed-in user can save a basket, set a price alert with consent, and file a price report', async ({ page, request }) => {
+test('a signed-in user can save a basket, set a price alert with consent, and file a price report', async ({
+  page,
+  request,
+}) => {
   const email = uniqEmail('flow');
-  await request.post('/api/v1/auth/register', { data: { email, password: PASSWORD, acceptTerms: true }, headers: { 'x-qarib-csrf': '1' } });
+  await request.post('/api/v1/auth/register', {
+    data: { email, password: PASSWORD, acceptTerms: true },
+    headers: { 'x-qarib-csrf': '1' },
+  });
   const token = tokenFrom((await latestMail(request, email)).text);
-  await request.post('/api/v1/auth/verify-email', { data: { token }, headers: { 'x-qarib-csrf': '1' } });
+  await request.post('/api/v1/auth/verify-email', {
+    data: { token },
+    headers: { 'x-qarib-csrf': '1' },
+  });
 
   await page.goto('/en/login');
   await acceptCookies(page);

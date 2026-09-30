@@ -26,6 +26,7 @@ const ADMIN_GETS = [
   '/v1/admin/matches',
   '/v1/admin/reports',
   '/v1/admin/takedowns',
+  '/v1/admin/claims',
 ];
 
 describe('access control', () => {
@@ -297,5 +298,77 @@ describe('takedowns and complaints (policy P6)', () => {
       .post(`/v1/admin/takedowns/${filed.body.id}/resolve`)
       .send({ action: 'rejected' })
       .expect(404); // already closed
+  });
+});
+
+describe('retailer claims (plan 11.3)', () => {
+  const valid = {
+    company_name: 'Example Mart WLL',
+    website: 'https://retailer.example',
+    contact_name: 'Sara Buyer',
+    contact_email: 'sara@retailer.example',
+    message: 'We can supply a daily price feed.',
+  };
+
+  it('anyone can file a claim; it is validated, stored, and the internal inbox is told (no mail to the claimant)', async () => {
+    const anon = request(t.server);
+    const bad = await anon
+      .post('/v1/retailers/claims')
+      .send({ ...valid, contact_email: 'nope', website: 'javascript:alert(1)' })
+      .expect(422);
+    expect(bad.body.errors.length).toBeGreaterThanOrEqual(2);
+    const before = t.mailer.sent.length;
+    const ok = await anon.post('/v1/retailers/claims').send(valid).expect(202);
+    expect(t.mailer.last('legal@example.qa')?.subject).toContain(ok.body.id);
+    expect(t.mailer.sent.length).toBe(before + 1);
+    expect(t.mailer.last('sara@retailer.example')).toBeUndefined();
+  });
+
+  it('admins verify through a documented decision: a reason is required, it is audited, and it is final', async () => {
+    const filed = await request(t.server).post('/v1/retailers/claims').send(valid).expect(202);
+    const user = await signUp(t);
+    await user.c
+      .post(`/v1/admin/claims/${filed.body.id}/decide`)
+      .send({ decision: 'verified', notes: 'sure ok' })
+      .expect(403);
+
+    const admin = await signUp(t, { admin: true });
+    const open = await admin.c.get('/v1/admin/claims').expect(200);
+    expect(open.body.map((x: { id: string }) => x.id)).toContain(filed.body.id);
+
+    await admin.c
+      .post(`/v1/admin/claims/${filed.body.id}/decide`)
+      .send({ decision: 'verified' })
+      .expect(409); // no reason
+    await admin.c
+      .post(`/v1/admin/claims/${filed.body.id}/decide`)
+      .send({ decision: 'verifying', notes: 'call booked' })
+      .expect(200);
+    await admin.c
+      .post(`/v1/admin/claims/${filed.body.id}/decide`)
+      .send({ decision: 'verified', notes: 'called back on the number from their website' })
+      .expect(200);
+    await admin.c
+      .post(`/v1/admin/claims/${filed.body.id}/decide`)
+      .send({ decision: 'rejected', notes: 'too late now' })
+      .expect(409);
+
+    const row = await t.db.one<{ status: string; decided_by: string }>(
+      'select status, decided_by from retailer_claims where id = $1',
+      [filed.body.id],
+    );
+    expect(row?.status).toBe('verified');
+    expect(row?.decided_by).toBeTruthy();
+    const still = await admin.c.get('/v1/admin/claims').expect(200);
+    expect(still.body.map((x: { id: string }) => x.id)).not.toContain(filed.body.id);
+  });
+
+  it('is rate limited per client like every other public form', async () => {
+    const codes: number[] = [];
+    for (let i = 0; i < 7; i++)
+      codes.push((await request(t.server).post('/v1/retailers/claims').send(valid)).status);
+    // 5 per hour per client: this spec has already filed 3, so the 6th request overall is refused
+    expect(codes).toContain(429);
+    expect(codes.filter((c) => c === 202).length).toBeLessThanOrEqual(2);
   });
 });

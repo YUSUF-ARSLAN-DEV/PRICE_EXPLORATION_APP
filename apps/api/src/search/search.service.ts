@@ -191,7 +191,9 @@ export class SearchService implements OnModuleDestroy {
           cands = await this.meiliCandidates(norm, q, pool);
           backend = 'meilisearch';
         } catch (err) {
-          this.log.warn(`Meilisearch unavailable, falling back to Postgres: ${(err as Error).message}`);
+          this.log.warn(
+            `Meilisearch unavailable, falling back to Postgres: ${(err as Error).message}`,
+          );
         }
       }
       if (backend === 'postgres') cands = await this.postgresCandidates(norm, q, pool);
@@ -203,7 +205,12 @@ export class SearchService implements OnModuleDestroy {
     const score = new Map(cands.map((c) => [c.id, c.score]));
     const [agg, pop] = await Promise.all([
       ids.length
-        ? this.db.query<{ product_id: string; offer_count: string; min_price: string; min_unit: string | null }>(
+        ? this.db.query<{
+            product_id: string;
+            offer_count: string;
+            min_price: string;
+            min_unit: string | null;
+          }>(
             `select product_id, count(*) as offer_count, min(price_qar) as min_price, min(unit_price_qar) as min_unit
                from public_offers where product_id = any($1::uuid[]) group by product_id`,
             [ids],
@@ -219,7 +226,16 @@ export class SearchService implements OnModuleDestroy {
           )
         : Promise.resolve([]),
     ]);
-    const info = new Map(agg.map((r) => [r.product_id, { offers: Number(r.offer_count), price: Number(r.min_price), unit: r.min_unit === null ? Infinity : Number(r.min_unit) }]));
+    const info = new Map(
+      agg.map((r) => [
+        r.product_id,
+        {
+          offers: Number(r.offer_count),
+          price: Number(r.min_price),
+          unit: r.min_unit === null ? Infinity : Number(r.min_unit),
+        },
+      ]),
+    );
     const popularity = new Map(pop.map((p) => [p.product_id, Number(p.n)]));
     const bucket = (id: string) => ((score.get(id) ?? 0) >= 0.6 ? 1 : 0);
 

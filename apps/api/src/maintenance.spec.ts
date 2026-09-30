@@ -106,6 +106,25 @@ describe('retention enforcement (plan 0.9)', () => {
     expect(await t.db.one('select 1 from consents where user_id = $1', [u!.id])).toBeUndefined();
   });
 
+  it('deletes open or rejected retailer claims after 12 months but keeps verified ones', async () => {
+    const mk = async (email: string) =>
+      (await t.db.one<{ id: string }>(
+        `insert into retailer_claims (company_name, contact_name, contact_email, received_at)
+         values ('Old Mart', 'Old Contact', $1, now() - interval '13 months') returning id`,
+        [email],
+      ))!.id;
+    const stale = await mk('stale@old.example');
+    const kept = await mk('kept@old.example');
+    await t.db.query(
+      `select decide_retailer_claim($1, 'verified', 'admin@x', 'verified by phone')`,
+      [kept],
+    );
+    const report = await job.run();
+    expect(report.retailer_claims_deleted).toBeGreaterThanOrEqual(1);
+    expect(await t.db.one('select 1 from retailer_claims where id = $1', [stale])).toBeUndefined();
+    expect(await t.db.one('select 1 from retailer_claims where id = $1', [kept])).toBeDefined();
+  });
+
   it('is idempotent: a second run right after finds nothing to do', async () => {
     await job.run();
     const again = await job.run();

@@ -179,6 +179,7 @@ module "apps" {
   public_hostname            = var.public_hostname
   admin_hostname             = var.admin_hostname
   gateway_public_ip          = azurerm_public_ip.gateway.ip_address
+  site_indexing              = var.site_indexing
   web_min_replicas           = var.web_min_replicas
   web_max_replicas           = var.web_max_replicas
   api_min_replicas           = var.api_min_replicas

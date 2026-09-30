@@ -8,6 +8,7 @@ export interface MaintenanceReport {
   search_log_deleted: number;
   email_tokens_deleted: number;
   refresh_tokens_deleted: number;
+  retailer_claims_deleted: number;
   personal_data_purge: Record<string, number>;
 }
 
@@ -53,6 +54,9 @@ export class MaintenanceService {
       ),
       refresh_tokens_deleted: await count(
         `delete from refresh_tokens where expires_at < now() - interval '7 days' returning 1`,
+      ),
+      retailer_claims_deleted: Number(
+        (await this.db.one<{ n: number }>('select purge_retailer_claims() as n'))?.n ?? 0,
       ),
       personal_data_purge: Object.fromEntries(
         purge.map((p) => [p.entity, Number(p.rows_affected)]),

@@ -11,3 +11,4 @@
 | Support / privacy requests | 2 years |
 | Price history (non-personal) | indefinite |
 | Raw ingestion artefacts (non-personal) | 90 days |
+| Retailer claims (business contacts) | unverified/rejected: 12 months then deleted by the maintenance job; verified: while the partnership lasts |

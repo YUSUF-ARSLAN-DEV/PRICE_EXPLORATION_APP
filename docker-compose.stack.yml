@@ -59,6 +59,7 @@ services:
       MEILI_MASTER_KEY: stack_master_key_stack_master_key_32
       RATE_LIMIT_PER_MIN: '100000'
       AUTH_RATE_LIMIT_PER_MIN: '100000'
+      FORM_RATE_LIMIT_PER_HOUR: '100000'
       RECEIPT_DIR: /data/receipts
     ports: ['4000:4000']
     depends_on:
@@ -67,7 +68,8 @@ services:
 
   web:
     image: qarib-web:dev
-    environment: { API_URL: 'http://api:4000/v1', PORT: '3000' }
+    environment:
+      { API_URL: 'http://api:4000/v1', PORT: '3000', SITE_INDEXING: '${SITE_INDEXING:-on}' }
     ports: ['3000:3000']
     depends_on: { api: { condition: service_healthy } }
 

@@ -8,6 +8,7 @@ health                                                      per-source health ta
 import argparse
 import logging
 import sys
+from decimal import Decimal
 from pathlib import Path
 
 from .adapters.feed import CsvFeedAdapter, JsonFeedAdapter
@@ -15,6 +16,7 @@ from .batch import SourceNotApproved, run_source
 from .config import Settings
 from .db import connect
 from .maintenance import run_maintenance
+from .qa import AuditInputError, audit, read_observations
 from .store import make_store
 
 
@@ -27,6 +29,10 @@ def main(argv: list[str] | None = None) -> int:
     feed.add_argument("--format", choices=["csv", "json"])
     sub.add_parser("maintenance")
     sub.add_parser("health")
+    qa = sub.add_parser("qa-audit", help="compare field-team observations with published prices")
+    qa.add_argument("--file", required=True, type=Path)
+    qa.add_argument("--tolerance", type=float, default=0.05)
+    qa.add_argument("--report", type=Path, help="write the markdown report here")
     args = parser.parse_args(argv)
 
     logging.basicConfig(
@@ -59,6 +65,19 @@ def main(argv: list[str] | None = None) -> int:
         if args.cmd == "maintenance":
             print(run_maintenance(conn, store))
             return 0
+        if args.cmd == "qa-audit":
+            try:
+                report = audit(
+                    conn, read_observations(args.file), tolerance=Decimal(str(args.tolerance))
+                )
+            except AuditInputError as exc:
+                print(f"INVALID AUDIT FILE: {exc}", file=sys.stderr)
+                return 2
+            text = report.markdown()
+            if args.report:
+                args.report.write_text(text, encoding="utf-8")
+            print(text)
+            return 0 if report.passes_gate else 1
         if args.cmd == "health":
             for row in conn.execute("select * from source_health order by retailer_slug"):
                 print(dict(row))

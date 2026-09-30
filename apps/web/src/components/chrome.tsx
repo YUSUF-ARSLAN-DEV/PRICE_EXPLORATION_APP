@@ -85,6 +85,7 @@ export function Footer({ locale, dict }: { locale: Locale; dict: Dict }) {
           <Link href={`/${locale}/cookies`}>{dict.footer.cookies}</Link>
           <Link href={`/${locale}/about`}>{dict.footer.about}</Link>
           <Link href={`/${locale}/report`}>{dict.footer.report}</Link>
+          <Link href={`/${locale}/retailers`}>{dict.footer.retailers}</Link>
           <button type="button" className="link-button" onClick={openSettings}>
             {dict.cookies.settings}
           </button>

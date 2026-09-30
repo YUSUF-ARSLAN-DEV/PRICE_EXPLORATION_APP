@@ -2,7 +2,10 @@ import { expect, test } from '@playwright/test';
 import { LOCALES, acceptCookies } from './helpers';
 
 for (const locale of LOCALES) {
-  test(`basket: add items, compare stores, cheapest store is named (${locale})`, async ({ page, request }) => {
+  test(`basket: add items, compare stores, cheapest store is named (${locale})`, async ({
+    page,
+    request,
+  }) => {
     const add = async (q: string) => {
       const res = await (await request.get(`/api/v1/search?q=${encodeURIComponent(q)}`)).json();
       await page.goto(`/${locale}/product/${res.results[0].id}`);
@@ -14,15 +17,24 @@ for (const locale of LOCALES) {
     await page.goto(`/${locale}/basket`);
     await expect(page.locator('ul li.card')).toHaveCount(2);
     await expect(page.locator('table.prices tbody tr').first()).toBeVisible();
-    await expect(page.getByText(locale === 'ar' ? 'أرخص متجر واحد' : 'Cheapest single store')).toBeVisible();
+    await expect(
+      page.getByText(locale === 'ar' ? 'أرخص متجر واحد' : 'Cheapest single store'),
+    ).toBeVisible();
     // quantity change recalculates
     const before = await page.locator('table.prices .price').first().textContent();
-    await page.getByLabel(locale === 'ar' ? 'الكمية' : 'Quantity').first().fill('4');
-    await expect.poll(async () => page.locator('table.prices .price').first().textContent()).not.toBe(before);
+    await page
+      .getByLabel(locale === 'ar' ? 'الكمية' : 'Quantity')
+      .first()
+      .fill('4');
+    await expect
+      .poll(async () => page.locator('table.prices .price').first().textContent())
+      .not.toBe(before);
     // persists across reloads (device storage) and can be cleared
     await page.reload();
     await expect(page.locator('ul li.card')).toHaveCount(2);
-    await page.getByRole('button', { name: locale === 'ar' ? 'إفراغ السلة' : 'Clear basket' }).click();
+    await page
+      .getByRole('button', { name: locale === 'ar' ? 'إفراغ السلة' : 'Clear basket' })
+      .click();
     await expect(page.locator('ul li.card')).toHaveCount(0);
   });
 }
@@ -38,7 +50,10 @@ test.describe('PWA', () => {
     for (const icon of manifest.icons) expect((await request.get(icon.src)).status()).toBe(200);
   });
 
-  test('service worker installs, never caches API responses, and serves the offline page', async ({ page, context }) => {
+  test('service worker installs, never caches API responses, and serves the offline page', async ({
+    page,
+    context,
+  }) => {
     await page.goto('/en');
     await acceptCookies(page);
     const scope = await page.evaluate(async () => (await navigator.serviceWorker.ready).scope);
@@ -47,7 +62,9 @@ test.describe('PWA', () => {
     await page.evaluate(() => fetch('/api/v1/search?q=milk').then((r) => r.json()));
     const cached = await page.evaluate(async () => {
       const out: string[] = [];
-      for (const name of await caches.keys()) for (const req of await (await caches.open(name)).keys()) out.push(new URL(req.url).pathname);
+      for (const name of await caches.keys())
+        for (const req of await (await caches.open(name)).keys())
+          out.push(new URL(req.url).pathname);
       return out;
     });
     expect(cached.some((p) => p.startsWith('/api/'))).toBe(false);

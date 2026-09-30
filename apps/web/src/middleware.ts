@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { isLocale, negotiateLocale } from './i18n';
+import { indexingEnabled } from './lib/indexing';
 
 /** Content-Security-Policy with a per-request nonce (plan 8.2). */
 export function buildCsp(nonce: string, opts: { dev: boolean; analyticsOrigin?: string }): string {
@@ -44,6 +45,7 @@ export function middleware(req: NextRequest) {
   headers.set('content-security-policy', csp);
   const res = NextResponse.next({ request: { headers } });
   res.headers.set('content-security-policy', csp);
+  if (!indexingEnabled()) res.headers.set('x-robots-tag', 'noindex, nofollow');
   res.cookies.set('qarib_locale', first, {
     path: '/',
     maxAge: 60 * 60 * 24 * 365,

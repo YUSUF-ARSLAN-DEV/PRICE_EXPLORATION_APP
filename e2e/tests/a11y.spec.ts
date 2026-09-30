@@ -17,7 +17,10 @@ async function productUrl(request: import('@playwright/test').APIRequestContext,
 
 for (const locale of LOCALES) {
   for (const scheme of ['light', 'dark'] as const) {
-    test(`no serious accessibility violations (${locale}, ${scheme})`, async ({ page, request }) => {
+    test(`no serious accessibility violations (${locale}, ${scheme})`, async ({
+      page,
+      request,
+    }) => {
       await page.emulateMedia({ colorScheme: scheme });
       const pages = [
         `/${locale}`,
@@ -28,6 +31,7 @@ for (const locale of LOCALES) {
         `/${locale}/register`,
         `/${locale}/terms`,
         `/${locale}/report`,
+        `/${locale}/retailers`,
       ];
       for (const url of pages) {
         await page.goto(url);
@@ -36,7 +40,13 @@ for (const locale of LOCALES) {
         const results = await new AxeBuilder({ page }).withTags(TAGS).analyze();
         const bad = results.violations.filter((v) => BLOCKING.includes(v.impact ?? ''));
         expect(
-          bad.map((v) => `${url}: ${v.id} (${v.impact}) - ${v.nodes.slice(0, 2).map((n) => n.target.join(' ')).join(' | ')}`),
+          bad.map(
+            (v) =>
+              `${url}: ${v.id} (${v.impact}) - ${v.nodes
+                .slice(0, 2)
+                .map((n) => n.target.join(' '))
+                .join(' | ')}`,
+          ),
           'axe violations',
         ).toEqual([]);
       }
@@ -47,20 +57,35 @@ for (const locale of LOCALES) {
     await page.goto(`/${locale}`);
     await expect(page.getByRole('dialog')).toBeVisible();
     let r = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual([]);
+    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual(
+      [],
+    );
     await acceptCookies(page);
     await page.goto(`/${locale}/basket`);
     r = await new AxeBuilder({ page }).withTags(TAGS).analyze();
-    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual([]);
+    expect(r.violations.filter((v) => BLOCKING.includes(v.impact ?? '')).map((v) => v.id)).toEqual(
+      [],
+    );
   });
 }
 
-test('all interactive controls are reachable and usable at 320 px width without horizontal scroll', async ({ page, request }) => {
+test('all interactive controls are reachable and usable at 320 px width without horizontal scroll', async ({
+  page,
+  request,
+}) => {
   await page.setViewportSize({ width: 320, height: 640 });
-  for (const url of ['/en', '/ar', '/en/offers', await productUrl(request, 'en'), await productUrl(request, 'ar')]) {
+  for (const url of [
+    '/en',
+    '/ar',
+    '/en/offers',
+    await productUrl(request, 'en'),
+    await productUrl(request, 'ar'),
+  ]) {
     await page.goto(url);
     await acceptCookies(page);
-    const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    );
     expect(overflow, `${url} overflows horizontally`).toBeLessThanOrEqual(1);
   }
 });

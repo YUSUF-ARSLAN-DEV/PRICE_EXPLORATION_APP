@@ -193,6 +193,26 @@ export const publicTakedownBody = takedownBody
     requester_email: z.string().email().max(254),
   });
 
+/** Retailer "claim your store" intake (plan 11.3). A claim grants no access; a human verifies it. */
+export const publicClaimBody = z.object({
+  company_name: z.string().trim().min(2).max(200),
+  website: z
+    .string()
+    .trim()
+    .max(300)
+    .regex(/^https?:\/\/\S+$/i, 'must start with http:// or https://')
+    .optional(),
+  contact_name: z.string().trim().min(2).max(200),
+  contact_email: z.string().trim().email().max(254),
+  contact_role: z.string().trim().max(100).optional(),
+  message: z.string().trim().max(2000).optional(),
+});
+export const decideClaimBody = z.object({
+  decision: z.enum(['verifying', 'verified', 'rejected']),
+  notes: z.string().trim().max(2000).optional(),
+  retailer_id: uuid.optional(),
+});
+
 export const DISCLAIMER_EN =
   'Prices come from retailers, partners and community reports and may change. Always check the price at the store or checkout.';
 export const DISCLAIMER_AR =

@@ -112,7 +112,9 @@ describe('search history is opt-in', () => {
     // a normal query in the same batch proves the flush really happened
     await request(t.server).get('/v1/search?q=controlquery').expect(200);
     await t.app.get(SearchService).flushLog();
-    expect(await t.db.one(`select 1 from search_log where query_norm = 'controlquery'`)).toBeDefined();
+    expect(
+      await t.db.one(`select 1 from search_log where query_norm = 'controlquery'`),
+    ).toBeDefined();
     const n = await t.db.one<{ n: string }>(
       `select count(*) as n from search_log where query_norm like '%example%' or query_norm like '%50123456789%'`,
     );

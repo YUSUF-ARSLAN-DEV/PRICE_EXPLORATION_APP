@@ -712,7 +712,8 @@ export function TakedownForm({ dict }: { dict: Dict }) {
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();
-        const fd = new FormData(e.currentTarget);
+        const form = e.currentTarget; // React nulls currentTarget after the first await
+        const fd = new FormData(form);
         try {
           await clientFetch('/takedown', {
             method: 'POST',
@@ -723,7 +724,7 @@ export function TakedownForm({ dict }: { dict: Dict }) {
             },
           });
           setS({ kind: 'ok', msg: dict.report.done });
-          e.currentTarget.reset();
+          form.reset();
         } catch {
           setS({ kind: 'error', msg: dict.common.error });
         }
@@ -744,6 +745,108 @@ export function TakedownForm({ dict }: { dict: Dict }) {
       </div>
       <button className="btn" type="submit">
         {dict.report.send}
+      </button>
+      <StatusLine s={s} />
+    </form>
+  );
+}
+
+// ---- retailer claim (plan 11.3) -----------------------------------------------------------------------
+export function ClaimForm({ dict }: { dict: Dict }) {
+  const [s, setS] = useStatus();
+  const t = dict.retailers;
+  return (
+    <form
+      method="post"
+      className="stack card"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        const form = e.currentTarget; // React nulls currentTarget after the first await
+        const fd = new FormData(form);
+        const opt = (k: string) =>
+          String(fd.get(k) ?? '').trim() ? String(fd.get(k)).trim() : undefined;
+        try {
+          await clientFetch('/retailers/claims', {
+            method: 'POST',
+            json: {
+              company_name: fd.get('company'),
+              website: opt('website'),
+              contact_name: fd.get('name'),
+              contact_email: fd.get('email'),
+              contact_role: opt('role'),
+              message: opt('message'),
+            },
+          });
+          setS({ kind: 'ok', msg: t.done });
+          form.reset();
+        } catch {
+          setS({ kind: 'error', msg: dict.common.error });
+        }
+      }}
+    >
+      <div className="field">
+        <label htmlFor="company">{t.company}</label>
+        <input
+          id="company"
+          name="company"
+          type="text"
+          required
+          minLength={2}
+          maxLength={200}
+          autoComplete="organization"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="website">{t.website}</label>
+        <input
+          id="website"
+          name="website"
+          type="url"
+          maxLength={300}
+          autoComplete="url"
+          placeholder="https://"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="cname">{t.name}</label>
+        <input
+          id="cname"
+          name="name"
+          type="text"
+          required
+          minLength={2}
+          maxLength={200}
+          autoComplete="name"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="cemail">{t.email}</label>
+        <input
+          id="cemail"
+          name="email"
+          type="email"
+          required
+          maxLength={254}
+          autoComplete="email"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="role">{t.role}</label>
+        <input
+          id="role"
+          name="role"
+          type="text"
+          maxLength={100}
+          autoComplete="organization-title"
+        />
+      </div>
+      <div className="field">
+        <label htmlFor="cmessage">{t.message}</label>
+        <textarea id="cmessage" name="message" maxLength={2000} />
+      </div>
+      <p className="muted">{t.privacy}</p>
+      <button className="btn" type="submit">
+        {t.send}
       </button>
       <StatusLine s={s} />
     </form>

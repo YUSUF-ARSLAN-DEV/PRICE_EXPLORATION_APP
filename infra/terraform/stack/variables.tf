@@ -140,3 +140,13 @@ variable "dns_zone_name" {
   type    = string
   default = ""
 }
+
+variable "site_indexing" {
+  type        = string
+  default     = "on"
+  description = "Set to \"off\" for the soft launch (plan 10.6): keeps the site out of search engines until day 14."
+  validation {
+    condition     = contains(["on", "off"], var.site_indexing)
+    error_message = "site_indexing must be \"on\" or \"off\"."
+  }
+}

@@ -145,3 +145,40 @@ jobs:
       - name: logs on failure
         if: failure()
         run: docker compose -f docker-compose.stack.yml logs --no-color --tail 200
+
+  e2e:
+    # Browser tests, accessibility, Lighthouse budgets, load and chaos against the production images (plan 10).
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile --filter @qarib/e2e...
+      - run: pnpm --filter @qarib/e2e exec playwright install --with-deps chromium
+      - name: build images
+        run: |
+          docker build -q -f apps/api/Dockerfile -t qarib-api:dev .
+          docker build -q -f apps/web/Dockerfile -t qarib-web:dev .
+          docker build -q -f apps/web/Dockerfile --build-arg APP=admin -t qarib-admin:dev .
+          docker build -q -f services/Dockerfile --target ingest -t qarib-ingest:dev .
+          docker build -q -f services/Dockerfile --target matcher -t qarib-matcher:dev .
+      - run: docker compose -f docker-compose.stack.yml up -d --wait --wait-timeout 180
+      - name: browser + accessibility + chaos tests
+        run: pnpm --filter @qarib/e2e test
+      - name: lighthouse budgets (performance >= 90, accessibility/SEO/best-practices >= 95)
+        run: pnpm --filter @qarib/e2e lighthouse
+      - name: load test (search p95 < 300 ms)
+        run: |
+          docker compose -f docker-compose.stack.yml exec -T db psql -U qarib -d qarib -v ON_ERROR_STOP=1 < load/seed-large.sql
+          docker compose -f docker-compose.stack.yml exec -T api node dist/jobs/run.js reindex
+          docker run --rm -i --network host -e API=http://localhost:4000 -e WEB=http://localhost:3000 grafana/k6 run --quiet - < load/api.js
+      - name: upload Playwright report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: playwright-report, path: e2e/playwright-report, retention-days: 7 }
+      - name: logs on failure
+        if: failure()
+        run: docker compose -f docker-compose.stack.yml logs --no-color --tail 200

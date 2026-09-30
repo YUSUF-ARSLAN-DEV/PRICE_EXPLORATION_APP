@@ -5,10 +5,17 @@ import { STACK_FILE } from './helpers';
 // Chaos checks (plan 10.3). They stop real containers of the local stack, so they run serially and
 // always restore the stack afterwards. Desktop project only.
 test.describe.configure({ mode: 'serial' });
-const compose = (...args: string[]) => execFileSync('docker', ['compose', '-f', STACK_FILE, ...args], { encoding: 'utf8' });
+const compose = (...args: string[]) =>
+  execFileSync('docker', ['compose', '-f', STACK_FILE, ...args], { encoding: 'utf8' });
 
 async function waitHealthy(request: import('@playwright/test').APIRequestContext) {
-  await expect.poll(async () => (await request.get('/api/v1/health/ready').catch(() => ({ status: () => 0 }))).status(), { timeout: 60_000 }).toBe(200);
+  await expect
+    .poll(
+      async () =>
+        (await request.get('/api/v1/health/ready').catch(() => ({ status: () => 0 }))).status(),
+      { timeout: 60_000 },
+    )
+    .toBe(200);
 }
 
 test('search keeps working (Postgres fallback) when Meilisearch is down', async ({ request }) => {
@@ -24,10 +31,15 @@ test('search keeps working (Postgres fallback) when Meilisearch is down', async 
   }
 });
 
-test('with the database down: readiness fails, pages show a friendly error (no stack traces), and everything recovers', async ({ page, request }) => {
+test('with the database down: readiness fails, pages show a friendly error (no stack traces), and everything recovers', async ({
+  page,
+  request,
+}) => {
   try {
     compose('stop', 'db');
-    await expect.poll(async () => (await request.get('/api/v1/health/ready')).status(), { timeout: 30_000 }).toBe(503);
+    await expect
+      .poll(async () => (await request.get('/api/v1/health/ready')).status(), { timeout: 30_000 })
+      .toBe(503);
     expect((await request.get('/api/v1/health/live')).status()).toBe(200); // liveness must NOT depend on the DB (no restart storms)
 
     const api = await request.get('/api/v1/search?q=milk');

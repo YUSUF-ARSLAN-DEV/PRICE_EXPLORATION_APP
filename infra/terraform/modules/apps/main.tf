@@ -39,6 +39,16 @@ variable "role_password_secret_ids" {
   })
 }
 
+variable "site_indexing" {
+  type        = string
+  default     = "on"
+  description = "\"off\" during the soft launch: robots.txt disallows everything, sitemap empty, X-Robots-Tag noindex (plan 10.6)."
+  validation {
+    condition     = contains(["on", "off"], var.site_indexing)
+    error_message = "site_indexing must be \"on\" or \"off\"."
+  }
+}
+
 variable "image_tag" {
   type        = string
   default     = "bootstrap"
@@ -410,6 +420,10 @@ resource "azurerm_container_app" "web" {
       env {
         name  = "PORT"
         value = "3000"
+      }
+      env {
+        name  = "SITE_INDEXING"
+        value = var.site_indexing
       }
       liveness_probe {
         transport        = "HTTP"

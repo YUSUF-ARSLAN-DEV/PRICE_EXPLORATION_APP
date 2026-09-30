@@ -6,12 +6,48 @@ import { check } from 'k6';
 
 const API = __ENV.API || 'http://localhost:4000';
 const WEB = __ENV.WEB || 'http://localhost:3000';
-const TERMS = ['milk', 'rice', 'eggs', 'water', 'حليب', 'أرز', 'DemoFarm', 'mineral', 'zzznotfound', 'nadec milk', 'almarai', 'rice organic', 'detergent family', 'tea premium', 'oil', 'lulu coffee', 'chips', 'sugar extra'];
+const TERMS = [
+  'milk',
+  'rice',
+  'eggs',
+  'water',
+  'حليب',
+  'أرز',
+  'DemoFarm',
+  'mineral',
+  'zzznotfound',
+  'nadec milk',
+  'almarai',
+  'rice organic',
+  'detergent family',
+  'tea premium',
+  'oil',
+  'lulu coffee',
+  'chips',
+  'sugar extra',
+];
 
 export const options = {
   scenarios: {
-    search: { executor: 'constant-arrival-rate', rate: 200, timeUnit: '1s', duration: '40s', preAllocatedVUs: 100, maxVUs: 300, exec: 'search' },
-    product_pages: { executor: 'constant-arrival-rate', rate: 50, timeUnit: '1s', duration: '40s', preAllocatedVUs: 50, maxVUs: 200, exec: 'productPage', startTime: '0s' },
+    search: {
+      executor: 'constant-arrival-rate',
+      rate: 200,
+      timeUnit: '1s',
+      duration: '40s',
+      preAllocatedVUs: 100,
+      maxVUs: 300,
+      exec: 'search',
+    },
+    product_pages: {
+      executor: 'constant-arrival-rate',
+      rate: 50,
+      timeUnit: '1s',
+      duration: '40s',
+      preAllocatedVUs: 50,
+      maxVUs: 200,
+      exec: 'productPage',
+      startTime: '0s',
+    },
   },
   thresholds: {
     'http_req_duration{scenario:search}': ['p(95)<300'], // plan: search p95 < 300 ms

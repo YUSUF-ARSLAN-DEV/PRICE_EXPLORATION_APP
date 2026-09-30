@@ -4,7 +4,8 @@
   "private": true,
   "scripts": {
     "test": "playwright test",
-    "install:browsers": "playwright install chromium"
+    "install:browsers": "playwright install chromium",
+    "lighthouse": "node lighthouse.mjs"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.0",
