@@ -5,6 +5,7 @@ import { launch } from 'chrome-launcher';
 import lighthouse from 'lighthouse';
 
 const base = process.argv[2] ?? 'http://localhost:3000';
+const RUNS = Number(process.env.LH_RUNS ?? 3);
 const BUDGET = { performance: 0.9, accessibility: 0.95, 'best-practices': 0.95, seo: 0.95 };
 
 const search = await (await fetch(`${base}/api/v1/search?q=milk`)).json();
@@ -22,13 +23,29 @@ const chrome = await launch({
 });
 let failed = 0;
 for (const path of pages) {
-  const { lhr } = await lighthouse(`${base}${path}`, {
-    port: chrome.port,
-    output: 'json',
-    logLevel: 'error',
-    onlyCategories: Object.keys(BUDGET),
-  });
-  const scores = Object.fromEntries(Object.entries(lhr.categories).map(([k, v]) => [k, v.score]));
+  // Median of 3 runs: a single run on a shared CI runner is noisy (CPU starvation shows up as layout shift
+  // and blocking time); the budgets themselves are unchanged.
+  const runs = [];
+  for (let i = 0; i < RUNS; i++) {
+    runs.push(
+      (
+        await lighthouse(`${base}${path}`, {
+          port: chrome.port,
+          output: 'json',
+          logLevel: 'error',
+          onlyCategories: Object.keys(BUDGET),
+        })
+      ).lhr,
+    );
+  }
+  const median = (xs) => [...xs].sort((x, y) => x - y)[Math.floor(xs.length / 2)];
+  const byScore = [...runs].sort(
+    (x, y) => x.categories.performance.score - y.categories.performance.score,
+  );
+  const lhr = byScore[Math.floor(runs.length / 2)]; // the median-performance run is the one reported
+  const scores = Object.fromEntries(
+    Object.keys(BUDGET).map((k) => [k, median(runs.map((r) => r.categories[k].score))]),
+  );
   const miss = Object.entries(BUDGET)
     .filter(([k, min]) => (scores[k] ?? 0) < min)
     .map(([k]) => k);
