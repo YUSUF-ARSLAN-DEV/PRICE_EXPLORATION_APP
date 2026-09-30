@@ -41,6 +41,32 @@ describe('errors are RFC 7807 problem documents that never leak internals', () =
   });
 });
 
+describe('health and dependency failure (plan 10.3)', () => {
+  it('liveness never touches the database; readiness does', async () => {
+    const spy = jest.spyOn(t.db, 'query');
+    await request(t.server).get('/v1/health/live').expect(200);
+    expect(spy).not.toHaveBeenCalled();
+    await request(t.server).get('/v1/health/ready').expect(200);
+    expect(spy).toHaveBeenCalled();
+    spy.mockRestore();
+  });
+
+  it('a database outage is a clean 503 problem document without connection details', async () => {
+    const spy = jest
+      .spyOn(t.db, 'query')
+      .mockRejectedValue(Object.assign(new Error('connect ECONNREFUSED 10.0.0.5:5432'), { code: 'ECONNREFUSED' }) as never);
+    const res = await request(t.server).get('/v1/health/ready').expect(503);
+    spy.mockRestore();
+    expect(res.headers['content-type']).toContain('problem+json');
+    expect(JSON.stringify(res.body)).not.toMatch(/10\.0\.0\.5|ECONNREFUSED|5432/);
+    expect(res.body.code).toBe('unavailable');
+  });
+
+  it('an error event on an idle pool client does not crash the process', () => {
+    expect(t.db.pool.listenerCount('error')).toBeGreaterThan(0);
+  });
+});
+
 describe('idempotency keys (plan 6.8)', () => {
   it('replays the first response for the same key and route; other routes/short keys are refused', async () => {
     const { c } = await signUp(t);
@@ -130,6 +156,8 @@ describe('OpenAPI contract (plan 6.1)', () => {
       '/v1/takedown',
       '/v1/admin/sources/{id}/kill-switch',
       '/v1/health',
+      '/v1/health/live',
+      '/v1/health/ready',
     ])
       expect(paths).toContain(p);
     const reg = spec.paths['/v1/auth/register'].post.requestBody.content['application/json'].schema;

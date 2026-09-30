@@ -21,6 +21,9 @@ export default {
   // cannot create the symlinks the standalone trace needs.
   output: process.env.NEXT_STANDALONE === '1' ? 'standalone' : undefined,
   transpilePackages: ['@qarib/shared'],
+  // Render <title>/<meta description> in <head> for every user agent: by default Next 15 streams metadata
+  // into <body> for browsers, which SEO audits (and some crawlers) do not recognise.
+  htmlLimitedBots: /.*/,
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },

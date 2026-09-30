@@ -430,8 +430,10 @@ table.prices tr.best td {
   .search-form {
     flex-direction: column;
   }
-  table.prices th:nth-child(4),
-  table.prices td:nth-child(4) {
-    display: none;
+  /* The "Updated" column must never be hidden on phones: prices always show when they were last
+     updated (plan 7.2). The table scrolls horizontally inside its labelled, focusable region. */
+  table.prices th,
+  table.prices td {
+    padding: 0.55rem 0.6rem;
   }
 }

@@ -36,3 +36,7 @@ Thumbs.db
 !.vscode/extensions.json
 *.egg-info/
 .artefacts/
+
+# e2e artefacts
+e2e/test-results/
+e2e/playwright-report/

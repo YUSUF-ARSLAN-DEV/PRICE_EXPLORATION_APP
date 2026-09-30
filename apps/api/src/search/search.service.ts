@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import {
   DISCLAIMER_AR,
   DISCLAIMER_EN,
@@ -56,7 +56,7 @@ export function toOffer(r: OfferRow): Offer {
 }
 
 @Injectable()
-export class SearchService {
+export class SearchService implements OnModuleDestroy {
   private readonly log = new Logger('search');
 
   constructor(
@@ -130,6 +130,7 @@ export class SearchService {
   private async postgresCandidates(
     norm: string,
     q: SearchQuery,
+    pool: number,
   ): Promise<{ id: string; score: number }[]> {
     const tokens = norm.split(' ').filter(Boolean).slice(0, 6);
     const params: unknown[] = [norm];
@@ -160,7 +161,7 @@ export class SearchService {
           and exists (select 1 from public_offers o where o.product_id = p.id ${retailerFilter})
           ${categoryFilter}
         order by score desc
-        limit 200`,
+        limit ${pool}`,
       params,
     );
     return rows;
@@ -169,11 +170,12 @@ export class SearchService {
   private async meiliCandidates(
     norm: string,
     q: SearchQuery,
+    pool: number,
   ): Promise<{ id: string; score: number }[]> {
     const filter: string[] = [];
     if (q.category) filter.push(`category_slugs = "${q.category.replace(/"/g, '')}"`);
     if (q.retailer) filter.push(`retailer_slugs = "${q.retailer.replace(/"/g, '')}"`);
-    const ids = await this.meili.search(norm, filter, 200);
+    const ids = await this.meili.search(norm, filter, pool);
     return ids.map((id, i) => ({ id, score: 0.6 + 0.4 * (1 - i / Math.max(ids.length, 1)) }));
   }
 
@@ -182,25 +184,31 @@ export class SearchService {
     const norm = normalizeSearch(q.q);
     let backend: SearchResponse['backend'] = 'postgres';
     let cands: { id: string; score: number }[] = [];
+    const pool = Math.min(200, Math.max(60, q.offset + q.limit));
     if (norm) {
       if (this.meili.enabled) {
         try {
-          cands = await this.meiliCandidates(norm, q);
+          cands = await this.meiliCandidates(norm, q, pool);
           backend = 'meilisearch';
         } catch (err) {
-          this.log.warn(
-            `Meilisearch unavailable, falling back to Postgres: ${(err as Error).message}`,
-          );
+          this.log.warn(`Meilisearch unavailable, falling back to Postgres: ${(err as Error).message}`);
         }
       }
-      if (backend === 'postgres') cands = await this.postgresCandidates(norm, q);
+      if (backend === 'postgres') cands = await this.postgresCandidates(norm, q, pool);
     }
-    void this.logQuery(q.q, norm);
+    this.logQuery(q.q, norm);
 
+    // Rank on a light aggregate (one row per candidate), then load ONLY the requested page in full.
     const ids = cands.map((c) => c.id);
     const score = new Map(cands.map((c) => [c.id, c.score]));
-    const [products, pop] = await Promise.all([
-      this.loadProducts(ids),
+    const [agg, pop] = await Promise.all([
+      ids.length
+        ? this.db.query<{ product_id: string; offer_count: string; min_price: string; min_unit: string | null }>(
+            `select product_id, count(*) as offer_count, min(price_qar) as min_price, min(unit_price_qar) as min_unit
+               from public_offers where product_id = any($1::uuid[]) group by product_id`,
+            [ids],
+          )
+        : Promise.resolve([]),
       ids.length
         ? this.db.query<{ product_id: string; n: string }>(
             `select product_id, count(*) as n from (
@@ -211,43 +219,66 @@ export class SearchService {
           )
         : Promise.resolve([]),
     ]);
+    const info = new Map(agg.map((r) => [r.product_id, { offers: Number(r.offer_count), price: Number(r.min_price), unit: r.min_unit === null ? Infinity : Number(r.min_unit) }]));
     const popularity = new Map(pop.map((p) => [p.product_id, Number(p.n)]));
     const bucket = (id: string) => ((score.get(id) ?? 0) >= 0.6 ? 1 : 0);
 
-    const sorted = [...products].sort((a, b) => {
-      if (q.sort === 'price') return (a.min_price_qar ?? Infinity) - (b.min_price_qar ?? Infinity);
-      if (q.sort === 'unit_price') {
-        const ua = Math.min(...a.offers.map((o) => o.unit_price_qar ?? Infinity));
-        const ub = Math.min(...b.offers.map((o) => o.unit_price_qar ?? Infinity));
-        return ua - ub;
-      }
-      return (
-        bucket(b.id) - bucket(a.id) ||
-        Number(b.offer_count >= 2) - Number(a.offer_count >= 2) ||
-        (popularity.get(b.id) ?? 0) - (popularity.get(a.id) ?? 0) ||
-        (score.get(b.id) ?? 0) - (score.get(a.id) ?? 0)
-      );
-    });
+    const ranked = ids
+      .filter((id) => info.has(id)) // products without a public offer are never shown
+      .sort((a, b) => {
+        const ia = info.get(a)!;
+        const ib = info.get(b)!;
+        if (q.sort === 'price') return ia.price - ib.price;
+        if (q.sort === 'unit_price') return ia.unit - ib.unit;
+        return (
+          bucket(b) - bucket(a) ||
+          Number(ib.offers >= 2) - Number(ia.offers >= 2) ||
+          (popularity.get(b) ?? 0) - (popularity.get(a) ?? 0) ||
+          (score.get(b) ?? 0) - (score.get(a) ?? 0)
+        );
+      });
+    const page = await this.loadProducts(ranked.slice(q.offset, q.offset + q.limit));
     return {
       query: q.q,
       backend,
-      total: sorted.length,
-      results: sorted.slice(q.offset, q.offset + q.limit),
+      total: ranked.length,
+      results: page,
       disclaimer: q.lang === 'ar' ? DISCLAIMER_AR : DISCLAIMER_EN,
     };
   }
 
+  // ---- anonymous query log: buffered, so a popular query does not become a hot row -------------
+  private readonly logBuffer = new Map<string, number>();
+  private logTimer?: NodeJS.Timeout;
+
   /** Anonymous aggregate only: no user id, no IP. Skips anything that looks like personal data. */
-  private async logQuery(raw: string, norm: string): Promise<void> {
+  private logQuery(raw: string, norm: string): void {
     const digits = norm.match(/\d/g)?.length ?? 0;
     if (!norm || norm.length > 60 || raw.includes('@') || digits >= 6) return;
+    this.logBuffer.set(norm, (this.logBuffer.get(norm) ?? 0) + 1);
+    this.logTimer ??= setInterval(() => void this.flushLog(), 5000).unref();
+  }
+
+  /** Writes buffered counts (one upsert per distinct query). Called every 5 s and on shutdown. */
+  async flushLog(): Promise<void> {
+    if (this.logBuffer.size === 0) return;
+    const batch = [...this.logBuffer];
+    this.logBuffer.clear();
+    const queries = batch.map(([q]) => q);
+    const hits = batch.map(([, n]) => n);
     await this.db
       .query(
-        `insert into search_log (day, query_norm, hits) values (current_date, $1, 1)
-         on conflict (day, query_norm) do update set hits = search_log.hits + 1`,
-        [norm],
+        `insert into search_log (day, query_norm, hits)
+         select current_date, q, h from unnest($1::text[], $2::int[]) as t(q, h)
+         on conflict (day, query_norm) do update set hits = search_log.hits + excluded.hits`,
+        [queries, hits],
       )
-      .catch(() => undefined);
+      .catch((err: Error) => this.log.warn(`search log flush failed: ${err.message}`));
+  }
+
+  async onModuleDestroy(): Promise<void> {
+    if (this.logTimer) clearInterval(this.logTimer);
+    await this.flushLog();
   }
 
   async autocomplete(

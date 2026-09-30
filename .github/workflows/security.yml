@@ -40,16 +40,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          scan-type: fs
-          severity: HIGH,CRITICAL
-          exit-code: '1'
-      - uses: aquasecurity/trivy-action@v0.33.1
-        with:
-          scan-type: config
-          scan-ref: infra
-          severity: HIGH,CRITICAL
+      # Run Trivy from its container image (the setup action was unreliable on hosted runners).
+      - name: dependency + secret scan (HIGH/CRITICAL fail the build)
+        run: |
+          docker run --rm -v "$PWD":/src:ro aquasec/trivy:latest fs             --severity HIGH,CRITICAL --exit-code 1 --scanners vuln,secret             --skip-dirs '**/node_modules' --skip-dirs '**/.terraform' --skip-dirs '**/.next' /src
+      - name: infrastructure-as-code misconfiguration scan
+        run: |
+          docker run --rm -v "$PWD":/src:ro aquasec/trivy:latest config             --severity HIGH,CRITICAL --exit-code 1 --skip-dirs '**/.terraform' /src/infra
 
   license-check:
     runs-on: ubuntu-latest

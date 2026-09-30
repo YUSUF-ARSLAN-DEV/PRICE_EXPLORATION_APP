@@ -17,7 +17,7 @@ export function PriceTable({
 }) {
   const best = Math.min(...offers.map((o) => o.price_qar));
   return (
-    <div className="table-wrap">
+    <div className="table-wrap" role="region" aria-label={dict.product.prices} tabIndex={0}>
       <table className="prices">
         <caption className="sr-only">{dict.product.prices}</caption>
         <thead>

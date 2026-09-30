@@ -39,11 +39,15 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dict }) {
             aria-current={pathname === `/${locale}/basket` ? 'page' : undefined}
           >
             {dict.nav.basket}
-            {count > 0 && (
-              <span className="badge" aria-label={`${count}`} style={{ marginInlineStart: 6 }}>
-                {count}
-              </span>
-            )}
+            {/* always rendered (hidden while empty) so the header never changes size after hydration */}
+            <span
+              className="badge"
+              aria-hidden={count === 0}
+              aria-label={count > 0 ? `${count}` : undefined}
+              style={{ marginInlineStart: 6, visibility: count > 0 ? 'visible' : 'hidden' }}
+            >
+              {count > 0 ? count : 0}
+            </span>
           </Link>
           {ready && user ? (
             <>
@@ -52,8 +56,13 @@ export function Header({ locale, dict }: { locale: Locale; dict: Dict }) {
                 {dict.nav.logout}
               </button>
             </>
+          ) : ready ? (
+            item('/login', dict.nav.login)
           ) : (
-            ready && item('/login', dict.nav.login)
+            // reserve the space while the session is being checked (prevents layout shift)
+            <span aria-hidden="true" style={{ visibility: 'hidden' }}>
+              {dict.nav.login}
+            </span>
           )}
           <Link href={switchHref} lang={other} hrefLang={other} aria-label={dict.nav.languageLabel}>
             {dict.nav.language}

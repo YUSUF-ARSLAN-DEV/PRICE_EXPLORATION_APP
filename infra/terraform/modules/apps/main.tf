@@ -243,7 +243,7 @@ resource "azurerm_container_app" "api" {
       startup_probe {
         transport               = "HTTP"
         port                    = 4000
-        path                    = "/v1/health"
+        path                    = "/v1/health/live"
         initial_delay           = 3
         interval_seconds        = 5
         failure_count_threshold = 12
@@ -251,13 +251,13 @@ resource "azurerm_container_app" "api" {
       liveness_probe {
         transport        = "HTTP"
         port             = 4000
-        path             = "/v1/health"
+        path             = "/v1/health/live" # never depends on the DB: a DB blip must not restart replicas
         interval_seconds = 20
       }
       readiness_probe {
         transport        = "HTTP"
         port             = 4000
-        path             = "/v1/health"
+        path             = "/v1/health/ready"
         interval_seconds = 10
       }
     }

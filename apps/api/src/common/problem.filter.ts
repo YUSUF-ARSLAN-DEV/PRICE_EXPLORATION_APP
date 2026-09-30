@@ -69,6 +69,14 @@ export class ProblemFilter implements ExceptionFilter {
     if (typeof code === 'number' && code >= 400 && code < 500 && typeof http.type === 'string') {
       return base(code, { detail: code === 413 ? 'Request body too large' : 'Malformed request' });
     }
+    // Database unreachable / restarting / pool exhausted: a clean 503, never a leaked connection error
+    const net = exc as { code?: string; message?: string };
+    if (
+      (typeof net?.code === 'string' && /^(ECONNREFUSED|ECONNRESET|ETIMEDOUT|ENOTFOUND|EAI_AGAIN|57P0[1-3]|08[0-9]{3}|53300)$/.test(net.code)) ||
+      /Connection terminated|timeout exceeded when trying to connect/i.test(net?.message ?? '')
+    ) {
+      return base(503, { title: 'Service Unavailable', detail: 'The service is temporarily unavailable. Please try again shortly.', code: 'unavailable' });
+    }
     // Postgres errors raised by our SQL functions / constraints
     const pg = exc as { code?: string; message?: string };
     if (pg && typeof pg.code === 'string') {

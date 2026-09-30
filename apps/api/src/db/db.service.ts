@@ -1,4 +1,4 @@
-import { Inject, Injectable, OnModuleDestroy } from '@nestjs/common';
+import { Inject, Injectable, Logger, OnModuleDestroy } from '@nestjs/common';
 import { Pool, PoolClient, QueryResultRow } from 'pg';
 import { CONFIG, Config } from '../config';
 
@@ -12,7 +12,11 @@ export class Db implements OnModuleDestroy {
       max: 10,
       // Demo retailers are hidden from public views unless explicitly enabled (dev only).
       options: cfg.showDemo ? '-c qarib.show_demo=on' : undefined,
+      connectionTimeoutMillis: 5_000,
     });
+    // An idle client whose connection is dropped (DB restart, failover) emits 'error'. Unhandled, that
+    // crashes the whole process; handled, the pool discards the client and reconnects on the next query.
+    this.pool.on('error', (err) => new Logger('Db').warn(`idle client error: ${err.message}`));
   }
 
   async query<T extends QueryResultRow = QueryResultRow>(

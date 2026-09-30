@@ -16,11 +16,25 @@ export class PublicController {
     private readonly mailer: Mailer,
   ) {}
 
-  @Get('health')
-  @ApiOperation({ summary: 'Liveness + database reachability.' })
-  async health() {
+  /** Liveness: the process is up. Must NOT touch the database, or a DB blip restarts every replica. */
+  @Get('health/live')
+  @ApiOperation({ summary: 'Liveness (process only, no dependencies).' })
+  live() {
+    return { status: 'ok', service: 'api', time: new Date().toISOString() };
+  }
+
+  /** Readiness: can serve traffic (database reachable). 503 takes the replica out of rotation only. */
+  @Get('health/ready')
+  @ApiOperation({ summary: 'Readiness (database reachable).' })
+  async ready() {
     await this.db.query('select 1');
     return { status: 'ok', service: 'api', time: new Date().toISOString() };
+  }
+
+  @Get('health')
+  @ApiOperation({ summary: 'Alias of readiness (kept for compatibility with older probes).' })
+  async health() {
+    return this.ready();
   }
 
   /** Takedown / complaint intake (policy P6): anyone may file; a human handles it within 2 business days. */

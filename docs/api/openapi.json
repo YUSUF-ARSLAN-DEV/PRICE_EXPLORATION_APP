@@ -1,6 +1,36 @@
 {
   "openapi": "3.0.0",
   "paths": {
+    "/v1/health/live": {
+      "get": {
+        "operationId": "PublicController_live",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness (process only, no dependencies).",
+        "tags": [
+          "public"
+        ]
+      }
+    },
+    "/v1/health/ready": {
+      "get": {
+        "operationId": "PublicController_ready",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Readiness (database reachable).",
+        "tags": [
+          "public"
+        ]
+      }
+    },
     "/v1/health": {
       "get": {
         "operationId": "PublicController_health",
@@ -10,8 +40,10 @@
             "description": ""
           }
         },
-        "summary": "Liveness + database reachability.",
-        "tags": ["public"]
+        "summary": "Alias of readiness (kept for compatibility with older probes).",
+        "tags": [
+          "public"
+        ]
       }
     },
     "/v1/takedown": {
@@ -40,7 +72,10 @@
                     "maxLength": 2000
                   }
                 },
-                "required": ["requester_email", "summary"],
+                "required": [
+                  "requester_email",
+                  "summary"
+                ],
                 "additionalProperties": false
               }
             }
@@ -51,7 +86,9 @@
             "description": ""
           }
         },
-        "tags": ["public"]
+        "tags": [
+          "public"
+        ]
       }
     },
     "/v1/search": {
@@ -74,7 +111,10 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": ["en", "ar"],
+              "enum": [
+                "en",
+                "ar"
+              ],
               "default": "en"
             }
           },
@@ -102,7 +142,11 @@
             "in": "query",
             "schema": {
               "type": "string",
-              "enum": ["relevance", "price", "unit_price"],
+              "enum": [
+                "relevance",
+                "price",
+                "unit_price"
+              ],
               "default": "relevance"
             }
           },
@@ -135,7 +179,9 @@
           }
         },
         "summary": "Search products and compare prices across grocers (no account needed).",
-        "tags": ["search"]
+        "tags": [
+          "search"
+        ]
       }
     },
     "/v1/search/autocomplete": {
@@ -169,7 +215,9 @@
             "description": ""
           }
         },
-        "tags": ["search"]
+        "tags": [
+          "search"
+        ]
       }
     },
     "/v1/search/popular": {
@@ -182,7 +230,9 @@
           }
         },
         "summary": "Popular searches (anonymous, k>=20).",
-        "tags": ["search"]
+        "tags": [
+          "search"
+        ]
       }
     },
     "/v1/retailers": {
@@ -195,7 +245,9 @@
           }
         },
         "summary": "Retailers that currently have public prices.",
-        "tags": ["catalogue"]
+        "tags": [
+          "catalogue"
+        ]
       }
     },
     "/v1/categories": {
@@ -208,7 +260,9 @@
           }
         },
         "summary": "Category tree (restricted categories are never listed).",
-        "tags": ["catalogue"]
+        "tags": [
+          "catalogue"
+        ]
       }
     },
     "/v1/products/{id}": {
@@ -221,7 +275,9 @@
           }
         },
         "summary": "One product with all current offers and ~90 days of price history.",
-        "tags": ["catalogue"]
+        "tags": [
+          "catalogue"
+        ]
       }
     },
     "/v1/offers": {
@@ -234,7 +290,9 @@
           }
         },
         "summary": "Current promotions / flyer offers, biggest discounts first.",
-        "tags": ["catalogue"]
+        "tags": [
+          "catalogue"
+        ]
       }
     },
     "/v1/sitemap": {
@@ -247,7 +305,9 @@
           }
         },
         "summary": "Public product ids + update times (feeds the web sitemap).",
-        "tags": ["catalogue"]
+        "tags": [
+          "catalogue"
+        ]
       }
     },
     "/v1/baskets/optimise": {
@@ -278,7 +338,9 @@
                           "default": 1
                         }
                       },
-                      "required": ["product_id"],
+                      "required": [
+                        "product_id"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1,
@@ -295,7 +357,9 @@
                     "default": 0
                   }
                 },
-                "required": ["items"],
+                "required": [
+                  "items"
+                ],
                 "additionalProperties": false
               }
             }
@@ -307,7 +371,9 @@
           }
         },
         "summary": "Cheapest store (and best two-store split) for a list of products.",
-        "tags": ["baskets"]
+        "tags": [
+          "baskets"
+        ]
       }
     },
     "/v1/baskets": {
@@ -319,7 +385,9 @@
             "description": ""
           }
         },
-        "tags": ["baskets"]
+        "tags": [
+          "baskets"
+        ]
       },
       "post": {
         "operationId": "BasketsController_create",
@@ -353,13 +421,18 @@
                           "default": 1
                         }
                       },
-                      "required": ["product_id"],
+                      "required": [
+                        "product_id"
+                      ],
                       "additionalProperties": false
                     },
                     "maxItems": 100
                   }
                 },
-                "required": ["name", "items"],
+                "required": [
+                  "name",
+                  "items"
+                ],
                 "additionalProperties": false
               }
             }
@@ -370,7 +443,9 @@
             "description": ""
           }
         },
-        "tags": ["baskets"]
+        "tags": [
+          "baskets"
+        ]
       }
     },
     "/v1/baskets/{id}": {
@@ -406,13 +481,18 @@
                           "default": 1
                         }
                       },
-                      "required": ["product_id"],
+                      "required": [
+                        "product_id"
+                      ],
                       "additionalProperties": false
                     },
                     "maxItems": 100
                   }
                 },
-                "required": ["name", "items"],
+                "required": [
+                  "name",
+                  "items"
+                ],
                 "additionalProperties": false
               }
             }
@@ -423,7 +503,9 @@
             "description": ""
           }
         },
-        "tags": ["baskets"]
+        "tags": [
+          "baskets"
+        ]
       },
       "delete": {
         "operationId": "BasketsController_remove",
@@ -433,7 +515,9 @@
             "description": ""
           }
         },
-        "tags": ["baskets"]
+        "tags": [
+          "baskets"
+        ]
       }
     },
     "/v1/me": {
@@ -445,7 +529,9 @@
             "description": ""
           }
         },
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       },
       "patch": {
         "operationId": "MeController_update",
@@ -459,7 +545,10 @@
                 "properties": {
                   "locale": {
                     "type": "string",
-                    "enum": ["en", "ar"]
+                    "enum": [
+                      "en",
+                      "ar"
+                    ]
                   }
                 },
                 "additionalProperties": false
@@ -472,7 +561,9 @@
             "description": ""
           }
         },
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       },
       "delete": {
         "operationId": "MeController_remove",
@@ -490,7 +581,9 @@
                     "maxLength": 128
                   }
                 },
-                "required": ["password"],
+                "required": [
+                  "password"
+                ],
                 "additionalProperties": false
               }
             }
@@ -502,7 +595,9 @@
           }
         },
         "summary": "Erase the account (anonymises the row; removes personal content).",
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       }
     },
     "/v1/me/consents": {
@@ -536,7 +631,10 @@
                           "type": "boolean"
                         }
                       },
-                      "required": ["purpose", "granted"],
+                      "required": [
+                        "purpose",
+                        "granted"
+                      ],
                       "additionalProperties": false
                     },
                     "minItems": 1,
@@ -549,7 +647,9 @@
                     "default": "v0.1"
                   }
                 },
-                "required": ["consents"],
+                "required": [
+                  "consents"
+                ],
                 "additionalProperties": false
               }
             }
@@ -561,7 +661,9 @@
           }
         },
         "summary": "Grant/withdraw consents. Each change appends to the consent ledger.",
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       }
     },
     "/v1/me/export": {
@@ -574,7 +676,9 @@
           }
         },
         "summary": "Download all personal data we hold (JSON).",
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       }
     },
     "/v1/me/history": {
@@ -586,7 +690,9 @@
             "description": ""
           }
         },
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       },
       "delete": {
         "operationId": "MeController_clearHistory",
@@ -596,7 +702,9 @@
             "description": ""
           }
         },
-        "tags": ["me"]
+        "tags": [
+          "me"
+        ]
       }
     },
     "/v1/alerts": {
@@ -608,7 +716,9 @@
             "description": ""
           }
         },
-        "tags": ["alerts"]
+        "tags": [
+          "alerts"
+        ]
       },
       "post": {
         "operationId": "AlertsController_create",
@@ -631,7 +741,10 @@
                     "maximum": 5000
                   }
                 },
-                "required": ["product_id", "threshold_qar"],
+                "required": [
+                  "product_id",
+                  "threshold_qar"
+                ],
                 "additionalProperties": false
               }
             }
@@ -643,7 +756,9 @@
           }
         },
         "summary": "Create a price alert. Needs the alerts_email consent (PATCH /me/consents).",
-        "tags": ["alerts"]
+        "tags": [
+          "alerts"
+        ]
       }
     },
     "/v1/alerts/{id}": {
@@ -655,7 +770,9 @@
             "description": ""
           }
         },
-        "tags": ["alerts"]
+        "tags": [
+          "alerts"
+        ]
       }
     },
     "/v1/alerts/unsubscribe": {
@@ -675,7 +792,9 @@
                     "maxLength": 600
                   }
                 },
-                "required": ["token"],
+                "required": [
+                  "token"
+                ],
                 "additionalProperties": false
               }
             }
@@ -686,7 +805,9 @@
             "description": ""
           }
         },
-        "tags": ["alerts"]
+        "tags": [
+          "alerts"
+        ]
       }
     },
     "/v1/reports": {
@@ -699,7 +820,9 @@
           }
         },
         "summary": "Report a shelf price (optionally with a receipt/shelf photo). Needs sign-in.",
-        "tags": ["reports"]
+        "tags": [
+          "reports"
+        ]
       }
     },
     "/v1/admin/health": {
@@ -711,7 +834,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/sources": {
@@ -723,7 +848,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/sources/{id}/kill-switch": {
@@ -743,7 +870,9 @@
                     "maxLength": 500
                   }
                 },
-                "required": ["reason"],
+                "required": [
+                  "reason"
+                ],
                 "additionalProperties": false
               }
             }
@@ -755,7 +884,9 @@
           }
         },
         "summary": "Immediately disable a source (hides its prices from public views).",
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/sources/{id}/kill-switch/release": {
@@ -775,7 +906,9 @@
                     "maxLength": 500
                   }
                 },
-                "required": ["reason"],
+                "required": [
+                  "reason"
+                ],
                 "additionalProperties": false
               }
             }
@@ -786,7 +919,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/sources/{id}/changes": {
@@ -810,7 +945,12 @@
                     "properties": {
                       "legal_status": {
                         "type": "string",
-                        "enum": ["green", "amber", "red", "disabled"]
+                        "enum": [
+                          "green",
+                          "amber",
+                          "red",
+                          "disabled"
+                        ]
                       },
                       "approval_ref": {
                         "type": "string",
@@ -832,7 +972,10 @@
                     "additionalProperties": false
                   }
                 },
-                "required": ["reason", "change"],
+                "required": [
+                  "reason",
+                  "change"
+                ],
                 "additionalProperties": false
               }
             }
@@ -843,7 +986,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/source-changes": {
@@ -855,7 +1000,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/source-changes/{id}/approve": {
@@ -867,7 +1014,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/source-changes/{id}/reject": {
@@ -879,7 +1028,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/held-prices": {
@@ -891,7 +1042,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/held-prices/{id}/approve": {
@@ -903,7 +1056,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/held-prices/{id}/reject": {
@@ -915,7 +1070,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/staged-offers": {
@@ -927,7 +1084,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/staged-offers/{id}/approve": {
@@ -939,7 +1098,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/staged-offers/{id}/reject": {
@@ -951,7 +1112,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/dead-letters": {
@@ -963,7 +1126,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/matches": {
@@ -976,7 +1141,9 @@
           }
         },
         "summary": "Listings awaiting a match decision, with the matcher's candidates.",
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/matches/{id}/decide": {
@@ -995,7 +1162,9 @@
                     "format": "uuid"
                   }
                 },
-                "required": ["product_id"],
+                "required": [
+                  "product_id"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1006,7 +1175,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/matches/{id}/reject": {
@@ -1018,7 +1189,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/matches/{id}/split": {
@@ -1030,7 +1203,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/products/merge": {
@@ -1053,7 +1228,10 @@
                     "format": "uuid"
                   }
                 },
-                "required": ["keep", "drop"],
+                "required": [
+                  "keep",
+                  "drop"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1064,7 +1242,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/reports": {
@@ -1076,7 +1256,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/reports/{id}/accept": {
@@ -1088,7 +1270,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/reports/{id}/reject": {
@@ -1100,7 +1284,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/takedowns": {
@@ -1112,7 +1298,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       },
       "post": {
         "operationId": "AdminController_createTakedown",
@@ -1143,7 +1331,12 @@
                   },
                   "channel": {
                     "type": "string",
-                    "enum": ["email", "web_form", "letter", "other"],
+                    "enum": [
+                      "email",
+                      "web_form",
+                      "letter",
+                      "other"
+                    ],
                     "default": "email"
                   },
                   "summary": {
@@ -1152,7 +1345,9 @@
                     "maxLength": 2000
                   }
                 },
-                "required": ["summary"],
+                "required": [
+                  "summary"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1163,7 +1358,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/takedowns/{id}/acknowledge": {
@@ -1175,7 +1372,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/admin/takedowns/{id}/resolve": {
@@ -1204,7 +1403,9 @@
                     "maxLength": 2000
                   }
                 },
-                "required": ["action"],
+                "required": [
+                  "action"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1215,7 +1416,9 @@
             "description": ""
           }
         },
-        "tags": ["admin"]
+        "tags": [
+          "admin"
+        ]
       }
     },
     "/v1/auth/register": {
@@ -1241,12 +1444,17 @@
                   },
                   "locale": {
                     "type": "string",
-                    "enum": ["en", "ar"],
+                    "enum": [
+                      "en",
+                      "ar"
+                    ],
                     "default": "en"
                   },
                   "acceptTerms": {
                     "type": "boolean",
-                    "enum": [true]
+                    "enum": [
+                      true
+                    ]
                   },
                   "consentVersion": {
                     "type": "string",
@@ -1255,7 +1463,11 @@
                     "default": "v0.1"
                   }
                 },
-                "required": ["email", "password", "acceptTerms"],
+                "required": [
+                  "email",
+                  "password",
+                  "acceptTerms"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1267,7 +1479,9 @@
           }
         },
         "summary": "Create an account (needs acceptTerms). Always 202: no account enumeration.",
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/verify-email": {
@@ -1287,7 +1501,9 @@
                     "maxLength": 600
                   }
                 },
-                "required": ["token"],
+                "required": [
+                  "token"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1298,7 +1514,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/login": {
@@ -1322,7 +1540,10 @@
                     "maxLength": 128
                   }
                 },
-                "required": ["email", "password"],
+                "required": [
+                  "email",
+                  "password"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1333,7 +1554,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/refresh": {
@@ -1345,7 +1568,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/logout": {
@@ -1357,7 +1582,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/forgot-password": {
@@ -1376,7 +1603,9 @@
                     "format": "email"
                   }
                 },
-                "required": ["email"],
+                "required": [
+                  "email"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1387,7 +1616,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     },
     "/v1/auth/reset-password": {
@@ -1412,7 +1643,10 @@
                     "maxLength": 128
                   }
                 },
-                "required": ["token", "password"],
+                "required": [
+                  "token",
+                  "password"
+                ],
                 "additionalProperties": false
               }
             }
@@ -1423,7 +1657,9 @@
             "description": ""
           }
         },
-        "tags": ["auth"]
+        "tags": [
+          "auth"
+        ]
       }
     }
   },

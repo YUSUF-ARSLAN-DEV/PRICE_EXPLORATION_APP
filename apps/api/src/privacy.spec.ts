@@ -1,4 +1,5 @@
 import request from 'supertest';
+import { SearchService } from './search/search.service';
 import {
   PASSWORD,
   TestApp,
@@ -88,6 +89,7 @@ describe('search history is opt-in', () => {
   it('anonymous aggregate search log holds no user or IP data', async () => {
     const tag = uniq('agg').replace(/\d/g, (d) => 'ghijklmnop'[Number(d)]!); // no digits: digit-heavy queries are (correctly) not logged
     await request(t.server).get(`/v1/search?q=${tag}`).expect(200);
+    await t.app.get(SearchService).flushLog();
     const cols = await t.db.query<{ column_name: string }>(
       `select column_name from information_schema.columns where table_name = 'search_log' order by 1`,
     );
@@ -106,6 +108,11 @@ describe('search history is opt-in', () => {
     await request(t.server)
       .get('/v1/search?q=' + encodeURIComponent('50123456789'))
       .expect(200);
+    await t.app.get(SearchService).flushLog();
+    // a normal query in the same batch proves the flush really happened
+    await request(t.server).get('/v1/search?q=controlquery').expect(200);
+    await t.app.get(SearchService).flushLog();
+    expect(await t.db.one(`select 1 from search_log where query_norm = 'controlquery'`)).toBeDefined();
     const n = await t.db.one<{ n: string }>(
       `select count(*) as n from search_log where query_norm like '%example%' or query_norm like '%50123456789%'`,
     );
