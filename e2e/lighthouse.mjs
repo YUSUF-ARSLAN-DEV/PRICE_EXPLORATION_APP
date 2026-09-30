@@ -55,6 +55,8 @@ for (const path of pages) {
   );
   if (miss.length) {
     failed++;
+    for (const it of a['layout-shifts']?.details?.items ?? [])
+      console.log(`       - shift ${it.score?.toFixed(3)} ${it.node?.snippet?.slice(0, 140)}`);
     for (const k of miss) {
       const bad = Object.values(a).filter(
         (x) =>
