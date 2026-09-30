@@ -1,0 +1,437 @@
+/* Design tokens. Light/dark via prefers-color-scheme. Logical properties only, so the same CSS
+   works for LTR (English) and RTL (Arabic) without a second stylesheet (plan 7.1). */
+:root {
+  --bg: #f7f8fa;
+  --surface: #ffffff;
+  --text: #14181f;
+  --muted: #566070;
+  --border: #d9dee6;
+  --brand: #8a1538; /* maroon */
+  --brand-contrast: #ffffff;
+  --accent: #0b6b4b;
+  --warn: #8a5a00;
+  --warn-bg: #fff4d6;
+  --danger: #b00020;
+  --focus: #1a5fd0;
+  --radius: 10px;
+  --gap: 1rem;
+  --maxw: 72rem;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1218;
+    --surface: #171c25;
+    --text: #edf0f5;
+    --muted: #a3adbd;
+    --border: #2a3342;
+    --brand: #e0537e;
+    --brand-contrast: #1a0a11;
+    --accent: #4cc79b;
+    --warn: #ffd27a;
+    --warn-bg: #3a2c08;
+    --danger: #ff7a8c;
+    --focus: #7fb0ff;
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+html {
+  font-family:
+    'Noto Sans Arabic',
+    'IBM Plex Sans Arabic',
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    sans-serif;
+  line-height: 1.55;
+  -webkit-text-size-adjust: 100%;
+}
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  min-block-size: 100dvh;
+  display: flex;
+  flex-direction: column;
+}
+main {
+  flex: 1;
+  inline-size: 100%;
+  max-inline-size: var(--maxw);
+  margin-inline: auto;
+  padding: 1.25rem max(1rem, env(safe-area-inset-inline-start));
+}
+h1 {
+  font-size: clamp(1.5rem, 4vw, 2.25rem);
+  line-height: 1.2;
+  margin-block: 0.5rem 0.75rem;
+}
+h2 {
+  font-size: 1.25rem;
+  margin-block: 1.5rem 0.5rem;
+}
+a {
+  color: var(--brand);
+  text-underline-offset: 0.2em;
+}
+a:hover {
+  text-decoration-thickness: 2px;
+}
+:focus-visible {
+  outline: 3px solid var(--focus);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+.skip-link {
+  position: absolute;
+  inset-inline-start: 0.5rem;
+  inset-block-start: -4rem;
+  background: var(--brand);
+  color: var(--brand-contrast);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  z-index: 100;
+}
+.skip-link:focus {
+  inset-block-start: 0.5rem;
+}
+.sr-only {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* header / footer */
+.site-header {
+  background: var(--surface);
+  border-block-end: 1px solid var(--border);
+}
+.site-header .bar {
+  max-inline-size: var(--maxw);
+  margin-inline: auto;
+  padding: 0.6rem 1rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+.brand {
+  font-weight: 800;
+  font-size: 1.35rem;
+  text-decoration: none;
+  color: var(--brand);
+  margin-inline-end: auto;
+}
+.site-nav {
+  display: flex;
+  gap: 0.25rem 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.site-nav a,
+.link-button {
+  color: var(--text);
+  text-decoration: none;
+  padding: 0.4rem 0.2rem;
+  font: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.site-nav a[aria-current='page'] {
+  font-weight: 700;
+  border-block-end: 2px solid var(--brand);
+}
+.site-footer {
+  border-block-start: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.site-footer .inner {
+  max-inline-size: var(--maxw);
+  margin-inline: auto;
+  padding: 1.25rem 1rem;
+  display: grid;
+  gap: 0.6rem;
+}
+.site-footer nav {
+  display: flex;
+  gap: 0.4rem 1.25rem;
+  flex-wrap: wrap;
+}
+.site-footer a {
+  color: var(--muted);
+}
+
+/* forms & buttons */
+label {
+  display: block;
+  font-weight: 600;
+  margin-block-end: 0.25rem;
+}
+input[type='text'],
+input[type='email'],
+input[type='password'],
+input[type='number'],
+input[type='search'],
+textarea,
+select {
+  inline-size: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font: inherit;
+  min-block-size: 44px;
+}
+textarea {
+  min-block-size: 7rem;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-block-size: 44px;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius);
+  border: 1px solid var(--brand);
+  background: var(--brand);
+  color: var(--brand-contrast);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+.btn.secondary {
+  background: transparent;
+  color: var(--brand);
+}
+.btn.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+  color: #fff;
+}
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.field {
+  margin-block-end: 1rem;
+}
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+.error {
+  color: var(--danger);
+  font-weight: 600;
+}
+.ok {
+  color: var(--accent);
+  font-weight: 600;
+}
+.check {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-weight: 400;
+}
+.check input {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-block-start: 0.2rem;
+}
+
+/* cards & grids */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1rem;
+}
+.grid {
+  display: grid;
+  gap: var(--gap);
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+}
+.hero {
+  padding-block: 2rem 1rem;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+.search-form {
+  display: flex;
+  gap: 0.5rem;
+  position: relative;
+  max-inline-size: 40rem;
+}
+.search-form .box {
+  position: relative;
+  flex: 1;
+}
+.suggestions {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 100%;
+  z-index: 20;
+  list-style: none;
+  margin: 0.2rem 0 0;
+  padding: 0.25rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 0.15);
+}
+.suggestions li {
+  padding: 0.55rem 0.7rem;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.suggestions li[aria-selected='true'] {
+  background: var(--brand);
+  color: var(--brand-contrast);
+}
+.notice {
+  background: var(--warn-bg);
+  color: var(--warn);
+  border-radius: var(--radius);
+  padding: 0.75rem 1rem;
+}
+
+/* products & prices */
+.product-card {
+  display: grid;
+  gap: 0.35rem;
+  text-decoration: none;
+  color: inherit;
+}
+.product-card:hover {
+  border-color: var(--brand);
+}
+.price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.muted {
+  color: var(--muted);
+}
+.badge {
+  display: inline-block;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.1rem 0.5rem;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+}
+.badge.warn {
+  background: var(--warn-bg);
+  color: var(--warn);
+}
+.table-wrap {
+  overflow-x: auto;
+}
+table.prices {
+  inline-size: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+table.prices th,
+table.prices td {
+  padding: 0.7rem 0.8rem;
+  text-align: start;
+  border-block-end: 1px solid var(--border);
+  vertical-align: top;
+}
+table.prices td.num,
+table.prices th.num {
+  font-variant-numeric: tabular-nums;
+}
+table.prices tr.best td {
+  background: color-mix(in srgb, var(--accent) 12%, transparent);
+}
+.row {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.stack > * + * {
+  margin-block-start: 0.75rem;
+}
+.chart {
+  inline-size: 100%;
+  max-inline-size: 40rem;
+  block-size: auto;
+}
+.legend {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  font-size: 0.85rem;
+  padding: 0;
+  list-style: none;
+}
+
+/* cookie banner */
+.cookie-banner {
+  position: fixed;
+  inset-inline: 0.75rem;
+  inset-block-end: 0.75rem;
+  z-index: 90;
+  max-inline-size: 38rem;
+  margin-inline: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 0.25);
+  padding: 1rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+@media (max-width: 40rem) {
+  .search-form {
+    flex-direction: column;
+  }
+  table.prices th:nth-child(4),
+  table.prices td:nth-child(4) {
+    display: none;
+  }
+}

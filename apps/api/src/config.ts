@@ -13,7 +13,8 @@ const schema = z.object({
   ADMIN_URL: z.string().url().default('http://localhost:3001'),
   EXTRA_ALLOWED_ORIGINS: z.string().default(''),
   COOKIE_SECURE: bool.optional(),
-  TRUST_PROXY: bool.default('false'),
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(0),
+  REFRESH_COOKIE_PATH: z.string().default('/v1/auth'),
   SMTP_HOST: z.string().default('localhost'),
   SMTP_PORT: z.coerce.number().int().default(1025),
   MAIL_FROM: z.string().default('Qarib <no-reply@example.qa>'),
@@ -46,7 +47,8 @@ export interface Config {
   adminUrl: string;
   allowedOrigins: string[];
   cookieSecure: boolean;
-  trustProxy: boolean;
+  trustProxyHops: number;
+  refreshCookiePath: string;
   smtp: { host: string; port: number; from: string };
   legalEmail: string;
   meili?: { url: string; key?: string };
@@ -81,7 +83,8 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     adminUrl: e.ADMIN_URL,
     allowedOrigins: [...new Set(origins)],
     cookieSecure: e.COOKIE_SECURE ?? production,
-    trustProxy: e.TRUST_PROXY,
+    trustProxyHops: e.TRUST_PROXY_HOPS,
+    refreshCookiePath: e.REFRESH_COOKIE_PATH,
     smtp: { host: e.SMTP_HOST, port: e.SMTP_PORT, from: e.MAIL_FROM },
     legalEmail: e.LEGAL_EMAIL,
     meili: e.MEILI_URL ? { url: e.MEILI_URL, key: e.MEILI_MASTER_KEY } : undefined,

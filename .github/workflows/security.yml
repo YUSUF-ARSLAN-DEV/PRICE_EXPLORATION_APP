@@ -33,19 +33,19 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.12' }
       - run: pip install pip-audit
-      - run: pip-audit -r <(pip install -q -e services/ingest >/dev/null && pip freeze --exclude-editable)
+      - run: pip install -e services/ingest -e services/matcher && pip-audit --skip-editable
         shell: bash
 
   trivy-and-iac:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.33.1
         with:
           scan-type: fs
           severity: HIGH,CRITICAL
           exit-code: '1'
-      - uses: aquasecurity/trivy-action@0.28.0
+      - uses: aquasecurity/trivy-action@v0.33.1
         with:
           scan-type: config
           scan-ref: infra

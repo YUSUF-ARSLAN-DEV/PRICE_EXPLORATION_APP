@@ -174,14 +174,14 @@ export class AuthService {
     res.cookie(ACCESS_COOKIE, access, { ...base, path: '/', maxAge: this.cfg.accessTtlS * 1000 });
     res.cookie(REFRESH_COOKIE, refresh, {
       ...base,
-      path: '/v1/auth',
+      path: this.cfg.refreshCookiePath,
       maxAge: this.cfg.refreshTtlDays * 86400 * 1000,
     });
   }
 
   clearCookies(res: Response): void {
     res.clearCookie(ACCESS_COOKIE, { path: '/' });
-    res.clearCookie(REFRESH_COOKIE, { path: '/v1/auth' });
+    res.clearCookie(REFRESH_COOKIE, { path: this.cfg.refreshCookiePath });
   }
 
   /** Rotate the refresh token. Replaying a revoked token revokes the whole family (theft signal). */

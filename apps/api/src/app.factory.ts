@@ -26,7 +26,9 @@ export function buildOpenApi(app: INestApplication): OpenAPIObject {
 /** Shared by main.ts and the test-suite so tests exercise the real HTTP pipeline. */
 export async function configureApp(app: NestExpressApplication): Promise<NestExpressApplication> {
   const cfg = app.get<Config>(CONFIG);
-  if (cfg.trustProxy) app.set('trust proxy', 1);
+  // Number of reverse proxies in front of the API (App Gateway -> Next.js rewrite = 2), so that
+  // req.ip is the real client and rate limits / truncated-IP logs are per client, not per proxy.
+  if (cfg.trustProxyHops > 0) app.set('trust proxy', cfg.trustProxyHops);
   app.disable('x-powered-by');
   app.use(
     helmet({

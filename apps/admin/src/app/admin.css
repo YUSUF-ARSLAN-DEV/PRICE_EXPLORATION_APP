@@ -1,0 +1,142 @@
+:root {
+  --bg: #f4f5f7;
+  --fg: #14181f;
+  --card: #fff;
+  --border: #d5dae2;
+  --brand: #8a1538;
+  --ok: #0b6b4b;
+  --bad: #b00020;
+  color-scheme: light dark;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0f1218;
+    --fg: #edf0f5;
+    --card: #171c25;
+    --border: #2a3342;
+    --brand: #e0537e;
+    --ok: #4cc79b;
+    --bad: #ff7a8c;
+  }
+}
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  font:
+    15px/1.5 system-ui,
+    sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+header {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.6rem 1rem;
+  background: var(--card);
+  border-block-end: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+header strong {
+  color: var(--brand);
+  margin-inline-end: auto;
+}
+nav {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+a {
+  color: var(--brand);
+}
+main {
+  max-inline-size: 80rem;
+  margin-inline: auto;
+  padding: 1rem;
+}
+table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  background: var(--card);
+}
+th,
+td {
+  padding: 0.45rem 0.6rem;
+  text-align: start;
+  border-block-end: 1px solid var(--border);
+  vertical-align: top;
+  font-size: 0.9rem;
+}
+button,
+.btn {
+  font: inherit;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--brand);
+  border-radius: 6px;
+  background: var(--brand);
+  color: #fff;
+  cursor: pointer;
+}
+button.secondary {
+  background: transparent;
+  color: var(--brand);
+}
+button.danger {
+  background: var(--bad);
+  border-color: var(--bad);
+}
+input,
+select,
+textarea {
+  font: inherit;
+  padding: 0.4rem;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--card);
+  color: var(--fg);
+  inline-size: 100%;
+}
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-block-end: 1rem;
+}
+.row {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.ok {
+  color: var(--ok);
+}
+.bad {
+  color: var(--bad);
+}
+.muted {
+  opacity: 0.7;
+}
+.pill {
+  display: inline-block;
+  padding: 0 0.5rem;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  font-size: 0.8rem;
+}
+.pill.green {
+  color: var(--ok);
+  border-color: var(--ok);
+}
+.pill.red,
+.pill.disabled {
+  color: var(--bad);
+  border-color: var(--bad);
+}
+:focus-visible {
+  outline: 3px solid #1a5fd0;
+  outline-offset: 2px;
+}
