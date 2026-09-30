@@ -16,7 +16,7 @@
   "dependencies": {
     "@azure/identity": "^4.13.3",
     "@azure/storage-blob": "^12.25.0",
-    "@nestjs/common": "^11.0.0",
+    "@nestjs/common": "^12.1.0",
     "@nestjs/core": "^11.0.0",
     "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
