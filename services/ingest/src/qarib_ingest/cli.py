@@ -34,7 +34,10 @@ def main(argv: list[str] | None = None) -> int:
     )
     settings = Settings.from_env()
     store = make_store(
-        settings.azure_connection_string, settings.azure_container, settings.artefact_dir
+        settings.azure_connection_string,
+        settings.azure_container,
+        settings.artefact_dir,
+        settings.azure_account_url,
     )
 
     with connect(settings.database_url) as conn:

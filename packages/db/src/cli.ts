@@ -1,5 +1,6 @@
 import { connect } from './connection';
 import { migrateDown, migrateUp, migrationStatus } from './migrate';
+import { setRolePasswords } from './roles';
 import { seed } from './seed';
 
 async function main() {
@@ -21,12 +22,17 @@ async function main() {
         for (const s of await migrationStatus(client))
           console.log(`${s.applied ? '[x]' : '[ ]'} ${s.name}`);
         break;
+      case 'roles':
+        console.log(
+          `login enabled for: ${(await setRolePasswords(client)).join(', ') || 'no roles (no password variables set)'}`,
+        );
+        break;
       case 'seed':
         await seed(client);
         console.log('seeded');
         break;
       default:
-        console.error('usage: cli.ts up | down [steps] | status | seed');
+        console.error('usage: cli.ts up | down [steps] | status | roles | seed');
         process.exitCode = 1;
     }
   } finally {

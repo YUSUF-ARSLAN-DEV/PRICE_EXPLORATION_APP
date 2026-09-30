@@ -61,11 +61,20 @@ class AzureBlobArtifactStore:
 
     scheme = "azblob"
 
-    def __init__(self, connection_string: str, container: str) -> None:
+    def __init__(
+        self, connection_string: str | None, container: str, account_url: str | None = None
+    ) -> None:
         from azure.core.exceptions import ResourceExistsError
         from azure.storage.blob import BlobServiceClient
 
-        self._service = BlobServiceClient.from_connection_string(connection_string)
+        if account_url:
+            from azure.identity import DefaultAzureCredential
+
+            self._service = BlobServiceClient(account_url, credential=DefaultAzureCredential())
+        elif connection_string:
+            self._service = BlobServiceClient.from_connection_string(connection_string)
+        else:
+            raise ValueError("give a connection string or an account URL")
         self._container = self._service.get_container_client(container)
         try:
             self._container.create_container()
@@ -105,8 +114,11 @@ class AzureBlobArtifactStore:
 
 
 def make_store(
-    azure_connection_string: str | None, azure_container: str, local_dir: Path
+    azure_connection_string: str | None,
+    azure_container: str,
+    local_dir: Path,
+    azure_account_url: str | None = None,
 ) -> ArtifactStore:
-    if azure_connection_string:
-        return AzureBlobArtifactStore(azure_connection_string, azure_container)
+    if azure_account_url or azure_connection_string:
+        return AzureBlobArtifactStore(azure_connection_string, azure_container, azure_account_url)
     return LocalArtifactStore(local_dir)

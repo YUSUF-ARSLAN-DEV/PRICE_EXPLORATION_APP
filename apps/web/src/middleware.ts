@@ -21,6 +21,8 @@ export function buildCsp(nonce: string, opts: { dev: boolean; analyticsOrigin?: 
 
 export function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
+  // Static well-known files (security.txt) are served as-is, never locale-redirected.
+  if (pathname.startsWith('/.well-known/')) return NextResponse.next();
   const first = pathname.split('/')[1];
 
   if (!isLocale(first)) {

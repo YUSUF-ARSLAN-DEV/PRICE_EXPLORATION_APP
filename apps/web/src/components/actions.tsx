@@ -107,7 +107,7 @@ export function ProductActions({
             <Link href={`/${locale}/login`}>{dict.product.signInNeeded}</Link>
           </p>
         ) : (
-          <form onSubmit={submitAlert} className="stack">
+          <form method="post" onSubmit={submitAlert} className="stack">
             <div className="field">
               <label htmlFor="threshold">{dict.product.alertHint}</label>
               <input
@@ -143,7 +143,7 @@ export function ProductActions({
             <Link href={`/${locale}/login`}>{dict.product.signInNeeded}</Link>
           </p>
         ) : (
-          <form onSubmit={submitReport} className="stack">
+          <form method="post" onSubmit={submitReport} className="stack">
             <div className="field">
               <label htmlFor="retailer">{dict.product.reportRetailer}</label>
               <select id="retailer" name="retailer" required>
@@ -365,6 +365,7 @@ export function LoginForm({ locale, dict }: { locale: Locale; dict: Dict }) {
   const [busy, setBusy] = useState(false);
   return (
     <form
+      method="post"
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -413,6 +414,7 @@ export function RegisterForm({ locale, dict }: { locale: Locale; dict: Dict }) {
   const [busy, setBusy] = useState(false);
   return (
     <form
+      method="post"
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -473,6 +475,7 @@ export function ForgotForm({ dict }: { dict: Dict }) {
   const [s, setS] = useStatus();
   return (
     <form
+      method="post"
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -499,6 +502,7 @@ export function ResetForm({ token, dict }: { token: string; dict: Dict }) {
   const [s, setS] = useStatus();
   return (
     <form
+      method="post"
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();
@@ -666,6 +670,7 @@ export function PrivacyCentre({ dict, locale }: { dict: Dict; locale: Locale }) 
         </h2>
         <p className="hint">{dict.privacy.deleteHint}</p>
         <form
+          method="post"
           className="stack"
           onSubmit={async (e) => {
             e.preventDefault();
@@ -703,6 +708,7 @@ export function TakedownForm({ dict }: { dict: Dict }) {
   const [s, setS] = useStatus();
   return (
     <form
+      method="post"
       className="stack card"
       onSubmit={async (e) => {
         e.preventDefault();

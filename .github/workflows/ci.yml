@@ -104,3 +104,44 @@ jobs:
       - uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  terraform:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: hashicorp/setup-terraform@v3
+        with: { terraform_version: 1.9.8 }
+      - run: terraform fmt -check -recursive infra/terraform
+      - name: validate every root module
+        run: |
+          for d in bootstrap stack spike-azure-availability; do
+            terraform -chdir=infra/terraform/$d init -backend=false -input=false
+            terraform -chdir=infra/terraform/$d validate
+          done
+
+  shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: shellcheck scripts/deploy/*.sh
+
+  images:
+    # Build every production image and run the whole system from them (plan 9.4/9.9).
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - name: build images
+        run: |
+          docker build -q -f apps/api/Dockerfile -t qarib-api:dev .
+          docker build -q -f apps/web/Dockerfile -t qarib-web:dev .
+          docker build -q -f apps/web/Dockerfile --build-arg APP=admin -t qarib-admin:dev .
+          docker build -q -f services/Dockerfile --target ingest -t qarib-ingest:dev .
+          docker build -q -f services/Dockerfile --target matcher -t qarib-matcher:dev .
+      - name: start the stack
+        run: docker compose -f docker-compose.stack.yml up -d --wait --wait-timeout 180
+      - name: smoke test
+        run: SMOKE_EXPECT_DATA=1 node scripts/smoke-stack.mjs
+      - name: logs on failure
+        if: failure()
+        run: docker compose -f docker-compose.stack.yml logs --no-color --tail 200

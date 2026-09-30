@@ -32,6 +32,8 @@ class Settings:
     max_price_qar: float = 5000.0
     artefact_dir: Path = Path(".artefacts")
     azure_connection_string: str | None = None
+    # Preferred in Azure: managed identity via DefaultAzureCredential, no shared keys.
+    azure_account_url: str | None = None
     azure_container: str = "raw-artefacts"
 
     @classmethod
@@ -42,5 +44,6 @@ class Settings:
             user_agent=env.get("INGEST_USER_AGENT", DEFAULT_USER_AGENT),
             artefact_dir=Path(env.get("INGEST_ARTEFACT_DIR", ".artefacts")),
             azure_connection_string=env.get("AZURE_STORAGE_CONNECTION_STRING") or None,
+            azure_account_url=env.get("AZURE_STORAGE_ACCOUNT_URL") or None,
             azure_container=env.get("INGEST_AZURE_CONTAINER", "raw-artefacts"),
         )

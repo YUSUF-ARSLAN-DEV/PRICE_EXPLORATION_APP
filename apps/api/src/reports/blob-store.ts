@@ -2,6 +2,7 @@ import { randomUUID } from 'node:crypto';
 import { mkdir, unlink, writeFile } from 'node:fs/promises';
 import path from 'node:path';
 import { Inject, Injectable } from '@nestjs/common';
+import { DefaultAzureCredential } from '@azure/identity';
 import { BlobServiceClient } from '@azure/storage-blob';
 import { CONFIG, Config } from '../config';
 
@@ -13,9 +14,10 @@ export class BlobStore {
 
   constructor(@Inject(CONFIG) private readonly cfg: Config) {
     if (cfg.azure) {
-      this.container = BlobServiceClient.fromConnectionString(
-        cfg.azure.connectionString,
-      ).getContainerClient(cfg.azure.container);
+      const service = cfg.azure.accountUrl
+        ? new BlobServiceClient(cfg.azure.accountUrl, new DefaultAzureCredential())
+        : BlobServiceClient.fromConnectionString(cfg.azure.connectionString!);
+      this.container = service.getContainerClient(cfg.azure.container);
     }
   }
 

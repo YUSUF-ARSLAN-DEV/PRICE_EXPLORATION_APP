@@ -4,6 +4,7 @@ import { after, before, describe, test } from 'node:test';
 import { Client } from 'pg';
 import { connect, databaseUrl } from './connection';
 import { loadMigrations, migrateDown, migrateUp, migrationStatus } from './migrate';
+import { setRolePasswords } from './roles';
 import { seed } from './seed';
 
 /**
@@ -1244,6 +1245,89 @@ describe('personal-data drift guard', () => {
           'contribution detached from the user',
         );
       });
+    },
+  );
+});
+
+// ---- real logins as the restricted roles ------------------------------------------------------------
+describe('role login provisioning', () => {
+  dbTest(
+    'setRolePasswords enables login; each role really is restricted over a real connection',
+    async (c) => {
+      const pw = (n: string) => `pw-${n}-${randomBytes(12).toString('hex')}`;
+      const env = {
+        QARIB_API_DB_PASSWORD: pw('api'),
+        QARIB_WORKER_DB_PASSWORD: pw('worker'),
+        QARIB_READONLY_DB_PASSWORD: pw('ro'),
+      };
+      try {
+        assert.deepEqual((await setRolePasswords(c, env)).sort(), [
+          'qarib_api',
+          'qarib_readonly',
+          'qarib_worker',
+        ]);
+        const asLogin = async (role: string, password: string) => {
+          const u = new URL(databaseUrl());
+          u.pathname = `/${dbName}`;
+          u.username = role;
+          u.password = password;
+          return connect(u.toString());
+        };
+        const ro = await asLogin('qarib_readonly', env.QARIB_READONLY_DB_PASSWORD);
+        const worker = await asLogin('qarib_worker', env.QARIB_WORKER_DB_PASSWORD);
+        const api = await asLogin('qarib_api', env.QARIB_API_DB_PASSWORD);
+        try {
+          await ro.query('select 1 from public_offers limit 1');
+          await assert.rejects(() => ro.query('select 1 from users'), /permission denied/);
+          await assert.rejects(() => worker.query('select 1 from users'), /permission denied/);
+          await worker.query('select 1 from retailer_products limit 1');
+          await api.query('select 1 from users limit 1');
+          await assert.rejects(() => api.query('create table x (a int)'), /permission denied/);
+        } finally {
+          await Promise.all([ro.end(), worker.end(), api.end()]);
+        }
+        // a wrong password is refused
+        await assert.rejects(
+          () => asLogin('qarib_api', 'definitely-not-the-password-00000'),
+          /password authentication failed/,
+        );
+      } finally {
+        await c.query(
+          'alter role qarib_api nologin; alter role qarib_worker nologin; alter role qarib_readonly nologin',
+        );
+      }
+    },
+  );
+
+  dbTest('rejects weak passwords and leaves roles without a variable NOLOGIN', async (c) => {
+    await assert.rejects(
+      () => setRolePasswords(c, { QARIB_API_DB_PASSWORD: 'short' }),
+      /at least 24/,
+    );
+    assert.deepEqual(await setRolePasswords(c, {}), []);
+    const r = await c.query(
+      `select rolname from pg_roles where rolname like 'qarib_%' and rolcanlogin`,
+    );
+    assert.equal(r.rowCount, 0);
+  });
+
+  dbTest(
+    'passwords containing quotes are handled safely (no SQL injection through the secret)',
+    async (c) => {
+      const tricky = `a'b";drop table users;--${randomBytes(8).toString('hex')}`;
+      try {
+        await setRolePasswords(c, { QARIB_READONLY_DB_PASSWORD: tricky });
+        const u = new URL(databaseUrl());
+        u.pathname = `/${dbName}`;
+        u.username = 'qarib_readonly';
+        u.password = tricky;
+        const ro = await connect(u.toString());
+        await ro.query('select 1');
+        await ro.end();
+        assert.ok(await c.query('select 1 from users limit 1'), 'users table must still exist');
+      } finally {
+        await c.query('alter role qarib_readonly nologin');
+      }
     },
   );
 });

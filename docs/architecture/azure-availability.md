@@ -1,5 +1,9 @@
 # Azure Qatar Central availability (plan step 9.0) - NOT YET RUN
 
+The spike Terraform (`infra/terraform/spike-azure-availability`) now passes `terraform validate`; it still needs a real
+subscription to apply. Procedure: `az login`, `terraform init`, then `terraform apply -target=<resource>` one resource at a
+time so each failure names the missing service/SKU; record the result below; `terraform destroy` afterwards.
+
 Run `infra/terraform/spike-azure-availability` (and portal checks) with a company Azure
 subscription. Fill the table with real results; then confirm or amend ADR-006.
 

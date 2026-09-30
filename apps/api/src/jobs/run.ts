@@ -4,6 +4,7 @@ import { AppModule } from '../app.module';
 import { AlertsService } from '../alerts/alerts.service';
 import { Db } from '../db/db.service';
 import { MeiliIndexer } from '../search/meili.indexer';
+import { FreshnessService } from './freshness.service';
 import { MaintenanceService } from './maintenance.service';
 import { hashPassword } from '../auth/auth.service';
 
@@ -30,6 +31,11 @@ async function main(job: string | undefined): Promise<void> {
       case 'maintenance':
         console.log(JSON.stringify(await app.get(MaintenanceService).run()));
         break;
+      case 'freshness': {
+        const r = await app.get(FreshnessService).check();
+        console.log(JSON.stringify({ checked: r.checked, breaches: r.breaches.length }));
+        break;
+      }
       case 'create-admin': {
         const email = process.env.ADMIN_EMAIL?.toLowerCase();
         const password = process.env.ADMIN_PASSWORD;
@@ -45,7 +51,7 @@ async function main(job: string | undefined): Promise<void> {
         break;
       }
       default:
-        throw new Error('usage: run.ts alerts | reindex | maintenance | create-admin');
+        throw new Error('usage: run.ts alerts | reindex | maintenance | freshness | create-admin');
     }
   } finally {
     await app.close();

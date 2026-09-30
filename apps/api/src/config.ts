@@ -29,6 +29,8 @@ const schema = z.object({
   AUTH_RATE_LIMIT_PER_MIN: z.coerce.number().int().min(1).default(10),
   RECEIPT_DIR: z.string().default('.receipts'),
   AZURE_STORAGE_CONNECTION_STRING: z.string().optional(),
+  // Preferred in Azure: managed identity (DefaultAzureCredential), no shared keys.
+  AZURE_STORAGE_ACCOUNT_URL: z.string().url().optional(),
   AZURE_RECEIPT_CONTAINER: z.string().default('receipts'),
   CLAMAV_HOST: z.string().optional(),
   CLAMAV_PORT: z.coerce.number().int().default(3310),
@@ -56,7 +58,7 @@ export interface Config {
   showDemo: boolean;
   swaggerUi: boolean;
   receiptDir: string;
-  azure?: { connectionString: string; container: string };
+  azure?: { connectionString?: string; accountUrl?: string; container: string };
   clamav?: { host: string; port: number };
 }
 
@@ -92,12 +94,14 @@ export function loadConfig(env: NodeJS.ProcessEnv = process.env): Config {
     showDemo: e.SHOW_DEMO,
     swaggerUi: e.SWAGGER_UI ?? !production,
     receiptDir: e.RECEIPT_DIR,
-    azure: e.AZURE_STORAGE_CONNECTION_STRING
-      ? {
-          connectionString: e.AZURE_STORAGE_CONNECTION_STRING,
-          container: e.AZURE_RECEIPT_CONTAINER,
-        }
-      : undefined,
+    azure:
+      e.AZURE_STORAGE_ACCOUNT_URL || e.AZURE_STORAGE_CONNECTION_STRING
+        ? {
+            connectionString: e.AZURE_STORAGE_CONNECTION_STRING,
+            accountUrl: e.AZURE_STORAGE_ACCOUNT_URL,
+            container: e.AZURE_RECEIPT_CONTAINER,
+          }
+        : undefined,
     clamav: e.CLAMAV_HOST ? { host: e.CLAMAV_HOST, port: e.CLAMAV_PORT } : undefined,
   };
 }

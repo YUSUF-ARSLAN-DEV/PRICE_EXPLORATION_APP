@@ -1,11 +1,11 @@
 # Environments (plan 1.3)
 
-| Env     | Azure subscription | Purpose                        | Access                      |
-| ------- | ------------------ | ------------------------------ | --------------------------- |
-| local   | none (docker)      | developer machines             | anyone                      |
-| dev     | TBD                | auto-deploy from feature/main  | team                        |
-| staging | TBD                | pre-prod, mirrors prod         | team                        |
-| prod    | TBD                | live                           | SSO + MFA, least privilege  |
+| Env | Azure | Purpose | Access |
+| --- | ----- | ------- | ------ |
+| local | none (`docker compose`; `docker-compose.stack.yml` = all production images) | developer machines | anyone |
+| dev | resource group `rg-qarib-dev` | auto-deploy from main | engineers via pipeline |
+| staging | `rg-qarib-staging` | release candidates, pen test, load test | pipeline + reviewers |
+| prod | `rg-qarib-prod` | live | pipeline (approval) + break-glass |
 
-Status: NOT PROVISIONED. Blocked on step 9.0 (Azure availability spike) and the company
-registration (Azure billing account should belong to the company, ADR-004).
+Files per environment: `backend.hcl` (state location), `terraform.tfvars.example` (copy to `terraform.tfvars`).
+Status: **NOT PROVISIONED** - needs the company Azure subscription (ADR-004/006) and the step 9.0 results.

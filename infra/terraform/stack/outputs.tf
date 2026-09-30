@@ -1,0 +1,9 @@
+output "resource_group" { value = azurerm_resource_group.this.name }
+output "gateway_public_ip" { value = azurerm_public_ip.gateway.ip_address }
+output "acr_login_server" { value = module.security.acr_login_server }
+output "key_vault_name" { value = module.security.key_vault_name }
+output "postgres_fqdn" { value = module.data.postgres_fqdn }
+output "web_app_name" { value = module.apps.web_name }
+output "api_app_name" { value = module.apps.api_name }
+output "container_apps_environment" { value = module.apps.environment_id }
+output "dns_name_servers" { value = var.manage_dns ? module.dns[0].name_servers : [] }

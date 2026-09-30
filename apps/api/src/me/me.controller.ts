@@ -6,6 +6,7 @@ import {
   ForbiddenException,
   Get,
   HttpCode,
+  Logger,
   Patch,
   Req,
   Res,
@@ -24,6 +25,8 @@ import { Db } from '../db/db.service';
 @Controller('me')
 @UseGuards(AuthGuard)
 export class MeController {
+  private readonly log = new Logger('privacy');
+
   constructor(
     private readonly db: Db,
     private readonly auth: AuthService,
@@ -147,6 +150,9 @@ export class MeController {
     if (!(await this.auth.verifyPassword(req.user!.id, body.password)))
       throw new ForbiddenException('Wrong password');
     await this.db.query('select erase_user($1)', [req.user!.id]);
+    // Pseudonymous id only. Kept in the platform log (30-35 d, same as backup retention) so that a database
+    // restore can re-apply erasures made after the restore point (docs/runbooks/disaster-recovery.md).
+    this.log.log(JSON.stringify({ event: 'user.erased', user_id: req.user!.id }));
     await this.auth.revokeAll(req.user!.id);
     this.auth.clearCookies(res);
   }

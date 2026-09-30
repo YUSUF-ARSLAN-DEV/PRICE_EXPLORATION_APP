@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const API_URL = process.env.API_URL ?? 'http://localhost:4000/v1';
-const API_ORIGIN = new URL(API_URL).origin;
 
 // Internal tool: never indexed, never framed. Production access additionally sits behind Entra ID
 // SSO + MFA and an IP allow-list at the edge (plan 8.2, Phase 9) - NOT implemented in this app.
@@ -24,8 +22,5 @@ export default {
         ],
       },
     ];
-  },
-  async rewrites() {
-    return [{ source: '/api/v1/:path*', destination: `${API_ORIGIN}/v1/:path*` }];
   },
 };

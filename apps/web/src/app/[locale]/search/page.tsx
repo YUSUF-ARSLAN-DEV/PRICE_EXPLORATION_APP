@@ -7,7 +7,10 @@ import { searchProducts } from '../../../lib/api';
 import { formatQar, sizeLabel, unitBaseLabel } from '../../../lib/format';
 import { localName, withLocale } from '../../../lib/page';
 
-type SP = Promise<{ q?: string; sort?: string }>;
+type SP = Promise<{ q?: string | string[]; sort?: string | string[] }>;
+/** Query params can repeat (?q=a&q=b): always take the first value. */
+const first = (v: string | string[] | undefined): string =>
+  Array.isArray(v) ? (v[0] ?? '') : (v ?? '');
 
 export async function generateMetadata({
   params,
@@ -17,7 +20,7 @@ export async function generateMetadata({
   searchParams: SP;
 }): Promise<Metadata> {
   const { locale, dict } = await withLocale(params);
-  const { q } = await searchParams;
+  const q = first((await searchParams).q);
   return {
     title: q ? t(dict.search.resultsFor, { q }) : dict.home.search,
     robots: { index: false, follow: true },
@@ -33,7 +36,9 @@ export default async function SearchPage({
   searchParams: SP;
 }) {
   const { locale, dict } = await withLocale(params);
-  const { q = '', sort = 'relevance' } = await searchParams;
+  const sp = await searchParams;
+  const q = first(sp.q);
+  const sort = first(sp.sort) || 'relevance';
   if (!q.trim()) redirect(`/${locale}`);
   const data = await searchProducts(
     q.trim().slice(0, 100),

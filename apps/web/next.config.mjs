@@ -1,6 +1,4 @@
 /** @type {import('next').NextConfig} */
-const API_URL = process.env.API_URL ?? 'http://localhost:4000/v1';
-const API_ORIGIN = new URL(API_URL).origin;
 const prod = process.env.NODE_ENV === 'production';
 
 const securityHeaders = [
@@ -25,9 +23,5 @@ export default {
   transpilePackages: ['@qarib/shared'],
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
-  },
-  // Browsers talk to the API through this same-origin proxy: no CORS, cookies stay first-party.
-  async rewrites() {
-    return [{ source: '/api/v1/:path*', destination: `${API_ORIGIN}/v1/:path*` }];
   },
 };
