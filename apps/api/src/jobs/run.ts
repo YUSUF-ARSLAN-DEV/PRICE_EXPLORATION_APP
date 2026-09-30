@@ -4,7 +4,7 @@ import { AppModule } from '../app.module';
 import { AlertsService } from '../alerts/alerts.service';
 import { Db } from '../db/db.service';
 import { MeiliIndexer } from '../search/meili.indexer';
-import { BlobStore } from '../reports/blob-store';
+import { MaintenanceService } from './maintenance.service';
 import { hashPassword } from '../auth/auth.service';
 
 /**
@@ -27,41 +27,9 @@ async function main(job: string | undefined): Promise<void> {
       case 'reindex':
         console.log(`indexed ${await app.get(MeiliIndexer).reindex()} products`);
         break;
-      case 'maintenance': {
-        const blobs = app.get(BlobStore);
-        const due = await db.query<{ price_report_id: string; receipt_blob_path: string }>(
-          'select * from receipts_due_for_deletion',
-        );
-        for (const r of due) {
-          await blobs.delete(r.receipt_blob_path);
-          await db.query(
-            'update price_reports set receipt_deleted_at = now(), receipt_blob_path = null where id = $1',
-            [r.price_report_id],
-          );
-        }
-        const idem = await db.query(
-          "delete from idempotency_keys where created_at < now() - interval '48 hours' returning 1",
-        );
-        const searchLog = await db.one<{ n: string }>('select purge_search_log() as n');
-        const purge = await db.query('select * from purge_expired_personal_data()');
-        const tokens = await db.query(
-          `delete from email_tokens where expires_at < now() - interval '7 days' returning 1`,
-        );
-        const refresh = await db.query(
-          `delete from refresh_tokens where expires_at < now() - interval '7 days' returning 1`,
-        );
-        console.log(
-          JSON.stringify({
-            receipts_deleted: due.length,
-            idempotency_deleted: idem.length,
-            search_log_deleted: searchLog?.n,
-            email_tokens_deleted: tokens.length,
-            refresh_tokens_deleted: refresh.length,
-            purge,
-          }),
-        );
+      case 'maintenance':
+        console.log(JSON.stringify(await app.get(MaintenanceService).run()));
         break;
-      }
       case 'create-admin': {
         const email = process.env.ADMIN_EMAIL?.toLowerCase();
         const password = process.env.ADMIN_PASSWORD;

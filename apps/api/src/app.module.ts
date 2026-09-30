@@ -10,6 +10,7 @@ import { CatalogController } from './catalog/catalog.controller';
 import { CsrfGuard } from './common/csrf.guard';
 import { IdempotencyInterceptor } from './common/idempotency.interceptor';
 import { DbModule } from './db/db.module';
+import { MaintenanceService } from './jobs/maintenance.service';
 import { MeController } from './me/me.controller';
 import { PublicController } from './public/public.controller';
 import { BlobStore } from './reports/blob-store';
@@ -40,6 +41,7 @@ import { SearchService } from './search/search.service';
     SearchService,
     MeiliIndexer,
     AlertsService,
+    MaintenanceService,
     BlobStore,
     { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: APP_GUARD, useClass: CsrfGuard },

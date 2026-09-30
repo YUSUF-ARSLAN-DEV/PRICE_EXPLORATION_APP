@@ -985,3 +985,265 @@ describe('seed', () => {
     },
   );
 });
+
+// ---- least-privilege roles (plan 8.2) -----------------------------------------------------------
+describe('database roles', () => {
+  /** Runs `sql` as `role` inside a rolled-back transaction; resolves to the error code or 'ok'. */
+  async function as(c: Client, role: string, sql: string, params: unknown[] = []): Promise<string> {
+    await c.query('begin');
+    try {
+      await c.query(`set local role ${role}`);
+      await c.query(sql, params);
+      return 'ok';
+    } catch (err) {
+      return (err as { code?: string }).code ?? 'error';
+    } finally {
+      await c.query('rollback');
+    }
+  }
+  const DENIED = '42501';
+
+  dbTest('readonly sees only the public views', async (c) => {
+    assert.equal(await as(c, 'qarib_readonly', 'select 1 from public_offers limit 1'), 'ok');
+    assert.equal(await as(c, 'qarib_readonly', 'select 1 from public_products limit 1'), 'ok');
+    assert.equal(await as(c, 'qarib_readonly', 'select 1 from public_price_history limit 1'), 'ok');
+    for (const table of [
+      'products',
+      'retailer_products',
+      'prices',
+      'sources',
+      'users',
+      'consents',
+      'audit_log',
+      'categories',
+    ]) {
+      assert.equal(await as(c, 'qarib_readonly', `select 1 from ${table} limit 1`), DENIED, table);
+    }
+    assert.equal(
+      await as(c, 'qarib_readonly', `insert into brands (name_en) values ('x')`),
+      DENIED,
+    );
+  });
+
+  dbTest('worker can ingest and match but can never read or write personal data', async (c) => {
+    const personal = [
+      'users',
+      'consents',
+      'baskets',
+      'basket_items',
+      'alerts',
+      'search_history',
+      'price_reports',
+      'email_tokens',
+      'refresh_tokens',
+      'idempotency_keys',
+      'takedown_requests',
+    ];
+    for (const table of personal) {
+      assert.equal(
+        await as(c, 'qarib_worker', `select 1 from ${table} limit 1`),
+        DENIED,
+        `${table} select`,
+      );
+      assert.equal(await as(c, 'qarib_worker', `delete from ${table}`), DENIED, `${table} delete`);
+    }
+    assert.equal(await as(c, 'qarib_worker', 'select 1 from schema_migrations'), DENIED);
+    assert.equal(await as(c, 'qarib_worker', 'select 1 from retailer_products limit 1'), 'ok');
+    assert.equal(
+      await as(c, 'qarib_worker', `insert into brands (name_en) values ('worker-brand')`),
+      'ok',
+    );
+    assert.equal(await as(c, 'qarib_worker', `update sources set notes = 'x' where false`), 'ok');
+    assert.equal(
+      await as(c, 'qarib_worker', 'delete from products'),
+      DENIED,
+      'workers cannot delete catalogue rows',
+    );
+    assert.equal(
+      await as(c, 'qarib_worker', 'update prices set price_qar = 1'),
+      DENIED,
+      'prices are append-only',
+    );
+    assert.equal(await as(c, 'qarib_worker', 'create table evil (id int)'), DENIED, 'no DDL');
+  });
+
+  dbTest(
+    'worker can run the real write path (record_price, disable_source) end to end',
+    async (c) => {
+      await tx(c, async () => {
+        const r = await mkRetailer(c);
+        const s = await mkSource(c, r);
+        const cat = await mkCategory(c, 'role-cat');
+        const p = await mkProduct(c, cat);
+        const rp = await mkListing(c, r, s, p);
+        await c.query('set local role qarib_worker');
+        await c.query(`select record_price($1, null, 5, null, 'none', null, true, now(), $2)`, [
+          rp,
+          s,
+        ]);
+        await c.query(`select disable_source($1, 'test')`, [s]);
+        await c.query('reset role');
+        const row = await one<{ kill_switch: boolean }>(
+          c,
+          'select kill_switch from sources where id = $1',
+          [s],
+        );
+        assert.equal(row.kill_switch, true);
+      });
+    },
+  );
+
+  dbTest(
+    'api role: DML yes, DDL no, prices/audit_log append-only, migrations table hidden',
+    async (c) => {
+      assert.equal(
+        await as(
+          c,
+          'qarib_api',
+          `insert into users (email, pw_hash) values ('role-test@example.com', 'h')`,
+        ),
+        'ok',
+      );
+      assert.equal(await as(c, 'qarib_api', 'select 1 from users limit 1'), 'ok');
+      assert.equal(await as(c, 'qarib_api', 'update prices set price_qar = 1'), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'delete from prices'), DENIED);
+      assert.equal(await as(c, 'qarib_api', `update audit_log set actor = 'x'`), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'delete from audit_log'), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'select 1 from schema_migrations'), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'drop table products'), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'alter table users add column x int'), DENIED);
+      assert.equal(await as(c, 'qarib_api', 'create role hacker'), DENIED);
+    },
+  );
+
+  dbTest('grants cover partitions created later', async (c) => {
+    await c.query(`select ensure_price_partitions(0, 14)`);
+    await c.query('select refresh_role_grants()');
+    const rows = await c.query<{ relname: string; api_update: boolean; worker_insert: boolean }>(
+      `select c.relname,
+              has_table_privilege('qarib_api', c.oid, 'update') as api_update,
+              has_table_privilege('qarib_worker', c.oid, 'insert') as worker_insert
+         from pg_class c where c.relname like 'prices\\_%' and c.relkind = 'r'`,
+    );
+    assert.ok(rows.rows.length >= 10);
+    for (const r of rows.rows) {
+      assert.equal(r.api_update, false, `${r.relname}: api must not update price history`);
+      assert.equal(r.worker_insert, true, `${r.relname}: worker must be able to insert`);
+    }
+  });
+});
+
+// ---- privacy: erasure completeness + schema-drift guard (plan 8.3) ----------------------------------
+describe('personal-data drift guard', () => {
+  // Every table that references a user. Adding a table here means: include it in GET /me/export,
+  // erase_user(), docs/legal/ropa.md and the retention schedule - THEN update this list.
+  const USER_TABLES = [
+    'alerts',
+    'baskets',
+    'consents',
+    'email_tokens',
+    'price_reports',
+    'refresh_tokens',
+    'search_history',
+  ];
+  const ERASED_COMPLETELY = [
+    'alerts',
+    'baskets',
+    'email_tokens',
+    'refresh_tokens',
+    'search_history',
+  ];
+
+  dbTest(
+    'no new table may reference users without being reviewed for export/erasure',
+    async (c) => {
+      const rows = await c.query<{ table_name: string }>(
+        `select distinct table_name from information_schema.columns
+        where table_schema = 'public' and column_name = 'user_id' order by 1`,
+      );
+      assert.deepEqual(
+        rows.rows.map((r) => r.table_name),
+        USER_TABLES,
+      );
+      const scoped = await c.query(
+        `select 1 from information_schema.columns where table_name = 'idempotency_keys' and column_name = 'scope'`,
+      );
+      assert.equal(
+        scoped.rowCount,
+        1,
+        'idempotency_keys.scope holds user ids and is cleaned by erase_user()',
+      );
+    },
+  );
+
+  dbTest(
+    'erase_user removes every identifying row, keeps only consent proof + anonymised tombstone',
+    async (c) => {
+      await tx(c, async () => {
+        const cat = await mkCategory(c, 'erase-cat');
+        const p = await mkProduct(c, cat);
+        const u = await one<{ id: string }>(
+          c,
+          `insert into users (email, pw_hash) values ('full@example.com', 'hash') returning id`,
+        );
+        const b = await one<{ id: string }>(
+          c,
+          'insert into baskets (user_id) values ($1) returning id',
+          [u.id],
+        );
+        await c.query('insert into basket_items (basket_id, product_id) values ($1, $2)', [
+          b.id,
+          p,
+        ]);
+        await c.query(
+          'insert into alerts (user_id, product_id, threshold_qar) values ($1, $2, 3)',
+          [u.id, p],
+        );
+        await c.query(`insert into search_history (user_id, query) values ($1, 'q')`, [u.id]);
+        await c.query(
+          `insert into email_tokens (user_id, purpose, token_hash, expires_at) values ($1, 'verify_email', 'h1', now() + interval '1 day')`,
+          [u.id],
+        );
+        await c.query(
+          `insert into refresh_tokens (user_id, family, token_hash, expires_at) values ($1, gen_random_uuid(), 'h2', now() + interval '1 day')`,
+          [u.id],
+        );
+        await c.query(
+          `insert into idempotency_keys (key, scope, method, path, status) values ('k-12345678', $1, 'POST', '/x', 201)`,
+          [u.id],
+        );
+        await c.query(
+          `insert into consents (user_id, purpose, granted, version) values ($1, 'history', true, 'v')`,
+          [u.id],
+        );
+        await c.query('insert into price_reports (user_id, reported_price_qar) values ($1, 2)', [
+          u.id,
+        ]);
+
+        await c.query('select erase_user($1)', [u.id]);
+
+        for (const t of ERASED_COMPLETELY) {
+          assert.equal(
+            (await c.query(`select 1 from ${t} where user_id = $1`, [u.id])).rowCount,
+            0,
+            t,
+          );
+        }
+        assert.equal(
+          (await c.query(`select 1 from idempotency_keys where scope = $1`, [u.id])).rowCount,
+          0,
+        );
+        assert.equal(
+          (await c.query('select 1 from consents where user_id = $1', [u.id])).rowCount,
+          1,
+          'consent proof kept',
+        );
+        assert.equal(
+          (await c.query('select 1 from price_reports where user_id = $1', [u.id])).rowCount,
+          0,
+          'contribution detached from the user',
+        );
+      });
+    },
+  );
+});

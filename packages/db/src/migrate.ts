@@ -92,6 +92,11 @@ export async function migrateUp(client: Client, dir = MIGRATIONS_DIR): Promise<s
         throw new Error(`Migration ${m.name} failed: ${(err as Error).message}`);
       }
     }
+    // Re-apply least-privilege grants so tables/partitions added by this run are covered (0011).
+    const fn = await client.query<{ e: boolean }>(
+      `select to_regproc('refresh_role_grants') is not null as e`,
+    );
+    if (fn.rows[0]?.e) await client.query('select refresh_role_grants()');
     return ran;
   });
 }

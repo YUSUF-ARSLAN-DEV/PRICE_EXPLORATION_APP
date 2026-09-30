@@ -1,0 +1,50 @@
+name: DAST (OWASP ZAP baseline)
+# Passive scan of the running stack (plan 8.4). Runs weekly and on demand. Point `target` at STAGING
+# for a real environment; by default it boots the stack in the runner from this repository.
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Base URL to scan (leave empty to start the stack locally in the runner)'
+        required: false
+  schedule:
+    - cron: '0 4 * * 2'
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  zap:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env: { POSTGRES_USER: qarib, POSTGRES_PASSWORD: qarib_local_only, POSTGRES_DB: qarib }
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U qarib" --health-interval 5s --health-timeout 3s --health-retries 10
+    env:
+      DATABASE_URL: postgresql://qarib:qarib_local_only@localhost:5432/qarib
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 22, cache: pnpm }
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+        if: ${{ !inputs.target }}
+      - name: Start stack
+        if: ${{ !inputs.target }}
+        run: |
+          pnpm db:migrate && pnpm seed
+          (SHOW_DEMO=true API_PORT=4000 REFRESH_COOKIE_PATH=/api/v1/auth node apps/api/dist/main.js &)
+          (cd apps/web && API_URL=http://localhost:4000/v1 npx next start -p 3000 &)
+          npx --yes wait-on http://localhost:4000/v1/health http://localhost:3000/en -t 90000
+      - name: ZAP baseline scan
+        uses: zaproxy/action-baseline@v0.14.0
+        with:
+          target: ${{ inputs.target || 'http://localhost:3000/en' }}
+          rules_file_name: '.zap/rules.tsv'
+          cmd_options: '-a'
+          allow_issue_writing: false
