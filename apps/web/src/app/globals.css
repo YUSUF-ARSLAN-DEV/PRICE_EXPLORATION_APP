@@ -448,6 +448,8 @@ table.prices tr.best td {
 .btn,
 .chip,
 .site-footer nav a,
+.cookie-banner a,
+.stack > a,
 summary,
 button {
   min-block-size: 2rem;
