@@ -1,10 +1,13 @@
 import 'reflect-metadata';
-import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
+import { createApp } from './app.factory';
+import { CONFIG, Config } from './config';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  app.setGlobalPrefix('v1', { exclude: ['health'] });
-  await app.listen(Number(process.env.API_PORT ?? 4000));
+  const app = await createApp();
+  const cfg = app.get<Config>(CONFIG);
+  app.enableShutdownHooks();
+  await app.listen(cfg.port, '0.0.0.0');
+  new Logger('bootstrap').log(`API listening on :${cfg.port} (${cfg.env})`);
 }
 void bootstrap();

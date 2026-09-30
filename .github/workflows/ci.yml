@@ -21,9 +21,16 @@ jobs:
         options: >-
           --health-cmd "pg_isready -U qarib" --health-interval 5s --health-timeout 3s
           --health-retries 10
+      meilisearch:
+        image: getmeili/meilisearch:v1.11
+        env:
+          MEILI_MASTER_KEY: local_master_key_change_me_32chars_min
+          MEILI_NO_ANALYTICS: 'true'
+        ports: ['7700:7700']
     env:
       DATABASE_URL: postgresql://qarib:qarib_local_only@localhost:5432/qarib
       REQUIRE_DB: '1' # db integration tests must run in CI, never silently skip
+      MEILI_TEST_URL: http://localhost:7700
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

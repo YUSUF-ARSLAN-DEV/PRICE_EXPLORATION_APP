@@ -1,0 +1,1453 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "operationId": "PublicController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Liveness + database reachability.",
+        "tags": ["public"]
+      }
+    },
+    "/v1/takedown": {
+      "post": {
+        "operationId": "PublicController_takedown",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "requester_name": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "requester_email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "summary": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 2000
+                  }
+                },
+                "required": ["requester_email", "summary"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "tags": ["public"]
+      }
+    },
+    "/v1/search": {
+      "get": {
+        "operationId": "SearchController_run",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 100
+            }
+          },
+          {
+            "name": "lang",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["en", "ar"],
+              "default": "en"
+            }
+          },
+          {
+            "name": "category",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "retailer",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "maxLength": 80
+            }
+          },
+          {
+            "name": "sort",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": ["relevance", "price", "unit_price"],
+              "default": "relevance"
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 50,
+              "default": 20
+            }
+          },
+          {
+            "name": "offset",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000,
+              "default": 0
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Search products and compare prices across grocers (no account needed).",
+        "tags": ["search"]
+      }
+    },
+    "/v1/search/autocomplete": {
+      "get": {
+        "operationId": "SearchController_autocomplete",
+        "parameters": [
+          {
+            "name": "q",
+            "required": true,
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 60
+            }
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 10,
+              "default": 8
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["search"]
+      }
+    },
+    "/v1/search/popular": {
+      "get": {
+        "operationId": "SearchController_popular",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Popular searches (anonymous, k>=20).",
+        "tags": ["search"]
+      }
+    },
+    "/v1/retailers": {
+      "get": {
+        "operationId": "CatalogController_retailers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Retailers that currently have public prices.",
+        "tags": ["catalogue"]
+      }
+    },
+    "/v1/categories": {
+      "get": {
+        "operationId": "CatalogController_categories",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Category tree (restricted categories are never listed).",
+        "tags": ["catalogue"]
+      }
+    },
+    "/v1/products/{id}": {
+      "get": {
+        "operationId": "CatalogController_product",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "One product with all current offers and ~90 days of price history.",
+        "tags": ["catalogue"]
+      }
+    },
+    "/v1/offers": {
+      "get": {
+        "operationId": "CatalogController_offers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Current promotions / flyer offers, biggest discounts first.",
+        "tags": ["catalogue"]
+      }
+    },
+    "/v1/sitemap": {
+      "get": {
+        "operationId": "CatalogController_sitemap",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Public product ids + update times (feeds the web sitemap).",
+        "tags": ["catalogue"]
+      }
+    },
+    "/v1/baskets/optimise": {
+      "post": {
+        "operationId": "BasketsController_optimise",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "quantity": {
+                          "type": "number",
+                          "exclusiveMinimum": true,
+                          "minimum": 0,
+                          "maximum": 999,
+                          "default": 1
+                        }
+                      },
+                      "required": ["product_id"],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 100
+                  },
+                  "allow_split": {
+                    "type": "boolean",
+                    "default": true
+                  },
+                  "split_penalty_qar": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 500,
+                    "default": 0
+                  }
+                },
+                "required": ["items"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Cheapest store (and best two-store split) for a list of products.",
+        "tags": ["baskets"]
+      }
+    },
+    "/v1/baskets": {
+      "get": {
+        "operationId": "BasketsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["baskets"]
+      },
+      "post": {
+        "operationId": "BasketsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "quantity": {
+                          "type": "number",
+                          "exclusiveMinimum": true,
+                          "minimum": 0,
+                          "maximum": 999,
+                          "default": 1
+                        }
+                      },
+                      "required": ["product_id"],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 100
+                  }
+                },
+                "required": ["name", "items"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["baskets"]
+      }
+    },
+    "/v1/baskets/{id}": {
+      "put": {
+        "operationId": "BasketsController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 60
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "product_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "quantity": {
+                          "type": "number",
+                          "exclusiveMinimum": true,
+                          "minimum": 0,
+                          "maximum": 999,
+                          "default": 1
+                        }
+                      },
+                      "required": ["product_id"],
+                      "additionalProperties": false
+                    },
+                    "maxItems": 100
+                  }
+                },
+                "required": ["name", "items"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["baskets"]
+      },
+      "delete": {
+        "operationId": "BasketsController_remove",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["baskets"]
+      }
+    },
+    "/v1/me": {
+      "get": {
+        "operationId": "MeController_me",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["me"]
+      },
+      "patch": {
+        "operationId": "MeController_update",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "locale": {
+                    "type": "string",
+                    "enum": ["en", "ar"]
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["me"]
+      },
+      "delete": {
+        "operationId": "MeController_remove",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["password"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "summary": "Erase the account (anonymises the row; removes personal content).",
+        "tags": ["me"]
+      }
+    },
+    "/v1/me/consents": {
+      "patch": {
+        "operationId": "MeController_setConsents",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "consents": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "purpose": {
+                          "type": "string",
+                          "enum": [
+                            "account_terms",
+                            "history",
+                            "alerts_email",
+                            "contribute_receipts",
+                            "analytics",
+                            "area_sync"
+                          ]
+                        },
+                        "granted": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": ["purpose", "granted"],
+                      "additionalProperties": false
+                    },
+                    "minItems": 1,
+                    "maxItems": 6
+                  },
+                  "version": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "default": "v0.1"
+                  }
+                },
+                "required": ["consents"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Grant/withdraw consents. Each change appends to the consent ledger.",
+        "tags": ["me"]
+      }
+    },
+    "/v1/me/export": {
+      "get": {
+        "operationId": "MeController_export",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Download all personal data we hold (JSON).",
+        "tags": ["me"]
+      }
+    },
+    "/v1/me/history": {
+      "get": {
+        "operationId": "MeController_history",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["me"]
+      },
+      "delete": {
+        "operationId": "MeController_clearHistory",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["me"]
+      }
+    },
+    "/v1/alerts": {
+      "get": {
+        "operationId": "AlertsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["alerts"]
+      },
+      "post": {
+        "operationId": "AlertsController_create",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "threshold_qar": {
+                    "type": "number",
+                    "exclusiveMinimum": true,
+                    "minimum": 0,
+                    "maximum": 5000
+                  }
+                },
+                "required": ["product_id", "threshold_qar"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Create a price alert. Needs the alerts_email consent (PATCH /me/consents).",
+        "tags": ["alerts"]
+      }
+    },
+    "/v1/alerts/{id}": {
+      "delete": {
+        "operationId": "AlertsController_remove",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["alerts"]
+      }
+    },
+    "/v1/alerts/unsubscribe": {
+      "post": {
+        "operationId": "AlertsController_unsubscribe",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 600
+                  }
+                },
+                "required": ["token"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["alerts"]
+      }
+    },
+    "/v1/reports": {
+      "post": {
+        "operationId": "ReportsController_create",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "summary": "Report a shelf price (optionally with a receipt/shelf photo). Needs sign-in.",
+        "tags": ["reports"]
+      }
+    },
+    "/v1/admin/health": {
+      "get": {
+        "operationId": "AdminController_health",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/sources": {
+      "get": {
+        "operationId": "AdminController_sources",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/sources/{id}/kill-switch": {
+      "post": {
+        "operationId": "AdminController_kill",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  }
+                },
+                "required": ["reason"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Immediately disable a source (hides its prices from public views).",
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/sources/{id}/kill-switch/release": {
+      "post": {
+        "operationId": "AdminController_release",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  }
+                },
+                "required": ["reason"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/sources/{id}/changes": {
+      "post": {
+        "operationId": "AdminController_requestChange",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "reason": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 500
+                  },
+                  "change": {
+                    "type": "object",
+                    "properties": {
+                      "legal_status": {
+                        "type": "string",
+                        "enum": ["green", "amber", "red", "disabled"]
+                      },
+                      "approval_ref": {
+                        "type": "string",
+                        "maxLength": 300
+                      },
+                      "tos_archive_url": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "robots_archive_url": {
+                        "type": "string",
+                        "maxLength": 500
+                      },
+                      "refresh_cron": {
+                        "type": "string",
+                        "maxLength": 100
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "required": ["reason", "change"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/source-changes": {
+      "get": {
+        "operationId": "AdminController_sourceChanges",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/source-changes/{id}/approve": {
+      "post": {
+        "operationId": "AdminController_approveChange",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/source-changes/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectChange",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/held-prices": {
+      "get": {
+        "operationId": "AdminController_held",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/held-prices/{id}/approve": {
+      "post": {
+        "operationId": "AdminController_approveHeld",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/held-prices/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectHeld",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/staged-offers": {
+      "get": {
+        "operationId": "AdminController_staged",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/staged-offers/{id}/approve": {
+      "post": {
+        "operationId": "AdminController_approveStaged",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/staged-offers/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectStaged",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/dead-letters": {
+      "get": {
+        "operationId": "AdminController_deadLetters",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/matches": {
+      "get": {
+        "operationId": "AdminController_matches",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "summary": "Listings awaiting a match decision, with the matcher's candidates.",
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/matches/{id}/decide": {
+      "post": {
+        "operationId": "AdminController_decide",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "product_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": ["product_id"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/matches/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectMatch",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/matches/{id}/split": {
+      "post": {
+        "operationId": "AdminController_split",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/products/merge": {
+      "post": {
+        "operationId": "AdminController_merge",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "keep": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "drop": {
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "required": ["keep", "drop"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/reports": {
+      "get": {
+        "operationId": "AdminController_reports",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/reports/{id}/accept": {
+      "post": {
+        "operationId": "AdminController_acceptReport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/reports/{id}/reject": {
+      "post": {
+        "operationId": "AdminController_rejectReport",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/takedowns": {
+      "get": {
+        "operationId": "AdminController_takedowns",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      },
+      "post": {
+        "operationId": "AdminController_createTakedown",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "retailer_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "source_id": {
+                    "type": "string",
+                    "format": "uuid"
+                  },
+                  "requester_name": {
+                    "type": "string",
+                    "maxLength": 200
+                  },
+                  "requester_email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "channel": {
+                    "type": "string",
+                    "enum": ["email", "web_form", "letter", "other"],
+                    "default": "email"
+                  },
+                  "summary": {
+                    "type": "string",
+                    "minLength": 5,
+                    "maxLength": 2000
+                  }
+                },
+                "required": ["summary"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/takedowns/{id}/acknowledge": {
+      "post": {
+        "operationId": "AdminController_ack",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/admin/takedowns/{id}/resolve": {
+      "post": {
+        "operationId": "AdminController_resolve",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "action": {
+                    "type": "string",
+                    "enum": [
+                      "source_disabled",
+                      "price_corrected",
+                      "content_hidden",
+                      "rejected",
+                      "forwarded_to_counsel"
+                    ]
+                  },
+                  "notes": {
+                    "type": "string",
+                    "maxLength": 2000
+                  }
+                },
+                "required": ["action"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["admin"]
+      }
+    },
+    "/v1/auth/register": {
+      "post": {
+        "operationId": "AuthController_register",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "maxLength": 254
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 128
+                  },
+                  "locale": {
+                    "type": "string",
+                    "enum": ["en", "ar"],
+                    "default": "en"
+                  },
+                  "acceptTerms": {
+                    "type": "boolean",
+                    "enum": [true]
+                  },
+                  "consentVersion": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "default": "v0.1"
+                  }
+                },
+                "required": ["email", "password", "acceptTerms"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "summary": "Create an account (needs acceptTerms). Always 202: no account enumeration.",
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/verify-email": {
+      "post": {
+        "operationId": "AuthController_verify",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 600
+                  }
+                },
+                "required": ["token"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/login": {
+      "post": {
+        "operationId": "AuthController_login",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["email", "password"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/refresh": {
+      "post": {
+        "operationId": "AuthController_refresh",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/logout": {
+      "post": {
+        "operationId": "AuthController_logout",
+        "parameters": [],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/forgot-password": {
+      "post": {
+        "operationId": "AuthController_forgot",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                },
+                "required": ["email"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    },
+    "/v1/auth/reset-password": {
+      "post": {
+        "operationId": "AuthController_reset",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "token": {
+                    "type": "string",
+                    "minLength": 20,
+                    "maxLength": 600
+                  },
+                  "password": {
+                    "type": "string",
+                    "minLength": 10,
+                    "maxLength": 128
+                  }
+                },
+                "required": ["token", "password"],
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": ["auth"]
+      }
+    }
+  },
+  "info": {
+    "title": "Qarib API",
+    "description": "Qatar grocery price comparison. Prices come from retailers, partners and community reports and may change.",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "cookie": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "qarib_at"
+      },
+      "bearer": {
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "type": "http"
+      }
+    },
+    "schemas": {}
+  }
+}

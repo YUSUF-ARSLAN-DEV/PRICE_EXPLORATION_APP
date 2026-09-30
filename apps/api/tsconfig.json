@@ -10,8 +10,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "outDir": "dist",
-    "rootDir": "src",
-    "types": ["node", "jest"]
+    "types": ["node", "jest", "multer", "express"]
   },
-  "include": ["src"]
+  "include": ["src", "test"]
 }
