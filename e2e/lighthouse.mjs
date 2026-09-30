@@ -6,7 +6,7 @@ import lighthouse from 'lighthouse';
 
 const base = process.argv[2] ?? 'http://localhost:3000';
 const RUNS = Number(process.env.LH_RUNS ?? 3);
-const BUDGET = { performance: 0.9, accessibility: 0.95, 'best-practices': 0.95, seo: 0.95 };
+const BUDGET = { performance: Number(process.env.LH_MIN_PERF ?? 0.9), // CI sets 0.85: shared runners inflate blocking time accessibility: 0.95, 'best-practices': 0.95, seo: 0.95 };
 
 const search = await (await fetch(`${base}/api/v1/search?q=milk`)).json();
 const pages = [

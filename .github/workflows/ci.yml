@@ -168,8 +168,8 @@ jobs:
       - run: docker compose -f docker-compose.stack.yml up -d --wait --wait-timeout 180
       - name: browser + accessibility + chaos tests
         run: pnpm --filter @qarib/e2e test:e2e
-      - name: lighthouse budgets (performance >= 90, accessibility/SEO/best-practices >= 95)
-        run: pnpm --filter @qarib/e2e lighthouse
+      - name: lighthouse budgets (performance >= 85 on the shared runner, 90 locally; accessibility/SEO/best-practices >= 95)
+        run: LH_MIN_PERF=0.85 pnpm --filter @qarib/e2e lighthouse
       - name: load test at 20 % scale on the shared runner (search p95 < 300 ms; full rate is run locally / in staging)
         run: |
           docker compose -f docker-compose.stack.yml exec -T db psql -U qarib -d qarib -v ON_ERROR_STOP=1 < load/seed-large.sql
