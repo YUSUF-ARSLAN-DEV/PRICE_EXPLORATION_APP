@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from typing import Any
 
 import pytest
 
@@ -9,12 +10,13 @@ from qarib_ingest.sizes import parse_size
 FIXTURES = Path(__file__).resolve().parents[3] / "packages" / "shared" / "fixtures"
 
 
-def _load(name: str) -> list[dict]:
-    return json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+def _load(name: str) -> list[dict[str, Any]]:
+    data: list[dict[str, Any]] = json.loads((FIXTURES / name).read_text(encoding="utf-8"))
+    return data
 
 
 @pytest.mark.parametrize("case", _load("arabic-cases.json"), ids=lambda c: repr(c["input"]))
-def test_normalize_search_matches_shared_fixtures(case: dict) -> None:
+def test_normalize_search_matches_shared_fixtures(case: dict[str, Any]) -> None:
     assert normalize_search(case["input"]) == case["expected"]
 
 
@@ -23,7 +25,7 @@ def test_size_fixture_count() -> None:
 
 
 @pytest.mark.parametrize("case", _load("size-cases.json"), ids=lambda c: repr(c["input"]))
-def test_parse_size_matches_shared_fixtures(case: dict) -> None:
+def test_parse_size_matches_shared_fixtures(case: dict[str, Any]) -> None:
     got = parse_size(case["input"])
     exp = case["expected"]
     if exp is None:
