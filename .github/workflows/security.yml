@@ -30,7 +30,7 @@ jobs:
         with: { node-version: 22, cache: pnpm }
       - run: pnpm install --frozen-lockfile
       - run: pnpm audit --audit-level high
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with: { python-version: '3.12' }
       - run: pip install pip-audit
       - run: pip install -e services/ingest -e services/matcher && pip-audit --skip-editable
